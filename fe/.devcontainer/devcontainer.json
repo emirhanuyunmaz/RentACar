@@ -1,0 +1,15 @@
+{
+  "name": "React Node Dev Container",
+  "image": "node:20",
+  "workspaceFolder": "/app",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached"
+  ],
+  "postCreateCommand": "npm install",
+  "forwardPorts": [5173],
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ],
+  "remoteUser": "node"
+}
