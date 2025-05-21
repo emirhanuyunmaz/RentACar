@@ -1,0 +1,125 @@
+import { Button, Form, Input, Select, type FormProps } from "antd";
+import UserLeftBar from "../components/UserLeftBar/UserLeftBar";
+
+type FieldType = {
+  name?:string,
+  surname?:string,
+  email?: string;
+  password?: string;
+  gender?: string;
+};
+
+const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+  console.log('Success:', values);
+};
+
+const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+  console.log('Failed:', errorInfo);
+};
+
+const handleChange = (value: string) => {
+  console.log(`selected ${value}`);
+};
+
+export default function Profile(){
+
+
+    return(<div className="relative">
+    <div className="absolute">
+        <UserLeftBar/>
+    </div>
+
+    <div className="max-w-7xl mx-auto">
+        
+        <div className="flex justify-center items-center h-14 bg-linear-to-r from-cyan-500 to-blue-500 my-5 rounded-xl">
+            <p className="text-white">Hello User</p>
+        </div>
+
+
+        <div className="">
+            <div className="flex items-center gap-4">
+                <img src="https://randomuser.me/api/portraits/men/78.jpg" alt="User Image" className="w-32 h-32 rounded-full" />
+                <div className="flex flex-col gap-3">
+                    <p>Name Surname</p>
+                    <p>test@gmail.com</p>
+                </div>
+            </div>
+        </div>
+
+        <div className="w-full">
+            <Form
+                name="basic"
+                layout={'vertical'}
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+            >
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <Form.Item<FieldType>
+                    label="Name"
+                    name="name"
+                    rules={[{ required: true, message: 'Please input your email!' }]}
+                    >
+                        <Input placeholder='Name' />
+                    </Form.Item>
+
+                    <Form.Item<FieldType>
+                    label="Surname"
+                    name="surname"
+                    rules={[{ required: true, message: 'Please input your email!' }]}
+                    >
+                        <Input placeholder='Surname' />
+                    </Form.Item>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <Form.Item<FieldType>
+                        label="Email"
+                        name="email"
+                        rules={[{ required: true, message: 'Please input your email!' }]}
+                    >
+                        <Input placeholder='Email' />
+                    </Form.Item>
+
+                    <Form.Item<FieldType>
+                        label="Password"
+                        name="password"
+                        rules={[{ required: true, message: 'Please input your password!' }]}
+                    >
+                        <Input.Password placeholder='Password' />
+                    </Form.Item>
+                </div>
+                
+
+
+                <Form.Item<FieldType>
+                    label="Gender"
+                    name="gender"
+                    className="md:w-1/2 pe-3"
+                    rules={[{ required: true, message: 'Gender is required!' }]}
+                    >
+                    <Select
+                        defaultValue="Gender"
+                        // style={{ width: 120 }}
+                        onChange={handleChange}
+                        options={[
+                            { value: 'male', label: 'Male' },
+                            { value: 'female', label: 'Female' },
+                            ]}
+                    />
+                </Form.Item>
+                
+            
+                <Form.Item label={null}>
+                    <Button type="primary" htmlType="submit">
+                        Update
+                    </Button>
+                </Form.Item>
+                
+            </Form>
+        </div>
+
+    </div>
+</div>)
+}
