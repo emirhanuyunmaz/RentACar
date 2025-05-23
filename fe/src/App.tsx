@@ -1,4 +1,3 @@
-// import { Button } from 'antd'
 import { Route, Routes } from 'react-router'
 import Login from './ui/Auth/Login'
 import Header from './ui/Header/Header'
@@ -10,10 +9,16 @@ import About from './ui/About/About'
 import Profile from './ui/Profile/Profile'
 import UserDashboard from './ui/Profile/UserDashboard'
 import ResetPassword from './ui/ResetPassword/ResetPassword'
+import Vehicles from './ui/Vehicles/Vehicles'
+import VehicleDetail from './ui/VehicleDetail/VehicleDetail'
+import AdminHome from './ui/Admin/AdminHome'
+import AdminCarList from './ui/Admin/AdminCarList'
+import AdminProfile from './ui/Admin/AdminProfile'
+import AdminDashboard from './ui/Admin/AdminDashboard'
+import AdminUserList from './ui/Admin/AdminUserList'
 
-function App() {
+export default function App() {
   
-
   return (
     <>
     <Header/>
@@ -27,10 +32,17 @@ function App() {
       <Route path="/profile" element={<Profile/>} />
       <Route path="/userDashboard" element={<UserDashboard/>} />
       <Route path="/resetPassword" element={<ResetPassword/>} />
+      <Route path="/vehicles" element={<Vehicles/>} />
+      <Route path="/vehicle/:id" element={<VehicleDetail/>} />
+      <Route path="/admin" element={<AdminHome/>} />
+      <Route path="/admin/profile" element={<AdminProfile/>} />
+      <Route path="/admin/dashboard" element={<AdminDashboard/>} />
+      <Route path="/admin/carList" element={<AdminCarList/>} />
+      <Route path="/admin/userList" element={<AdminUserList/>} />
     </Routes>
     <Footer/>
     </>
   )
 }
 
-export default App
+

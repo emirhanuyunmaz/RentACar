@@ -55,10 +55,15 @@ const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
         </Button>
         </Form.Item>
         <Form.Item label={null}>
-        <Link to={`/register`} replace>
-            Register
-        </Link>
+          <Link to={`/register`} replace>
+              Register
+          </Link>
         </Form.Item>
     </div>
+    <Form.Item<FieldType> >
+        <Link to={`/resetPassword`} >
+              Reset Password
+          </Link>
+    </Form.Item>
   </Form></div>)
 }
