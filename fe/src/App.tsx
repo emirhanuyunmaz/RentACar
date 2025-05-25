@@ -16,6 +16,8 @@ import AdminCarList from './ui/Admin/AdminCarList'
 import AdminProfile from './ui/Admin/AdminProfile'
 import AdminDashboard from './ui/Admin/AdminDashboard'
 import AdminUserList from './ui/Admin/AdminUserList'
+import AdminAddUser from './ui/Admin/AdminAddUser'
+import AdminAddCar from './ui/Admin/AdminAddCar'
 
 export default function App() {
   
@@ -39,6 +41,8 @@ export default function App() {
       <Route path="/admin/dashboard" element={<AdminDashboard/>} />
       <Route path="/admin/carList" element={<AdminCarList/>} />
       <Route path="/admin/userList" element={<AdminUserList/>} />
+      <Route path="/admin/addUser" element={<AdminAddUser/>} />
+      <Route path="/admin/addCar" element={<AdminAddCar/>} />
     </Routes>
     <Footer/>
     </>

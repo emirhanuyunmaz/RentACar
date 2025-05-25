@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Input, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
+import { Link } from 'react-router';
 
 interface DataType {
   key: React.Key;
@@ -67,7 +68,10 @@ export default function AdminUserList () {
 
                 <div className='w-[80%] px-10 overflow-y-auto flex flex-col gap-3'>
                     <div>
-                        <h1>User List</h1>
+                        <Link to={`/admin/addUser`}>
+                          +Add User
+                        </Link>
+                        
                     </div>
                     <div className='flex gap-3'>
                         <Input/>

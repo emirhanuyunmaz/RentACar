@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Input, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
+import DashboardTotalUser from './components/DashboardTotalUser';
 
 interface DataType {
   key: React.Key;
@@ -47,13 +48,19 @@ export default function AdminDashboard () {
   
   return (
     <div className="min-h-[80vh] flex gap-3">
+
                 <div className="w-[15%]">
                     <LeftBar/>
                 </div>
                 <div className='w-[85%] px-10 overflow-y-auto flex flex-col gap-3'>
+
                     <div>
                         <h1>Dashboard</h1>
                     </div>
+                    <div>
+                      <DashboardTotalUser/>
+                    </div>
+                    
                     <div className='flex gap-3'>
                         <Input/>
                         <Button>Search</Button>
