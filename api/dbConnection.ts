@@ -1,12 +1,5 @@
-import mysql2 from "mysql2"
-import { config } from "./src/utils/config";
-
-const connection = mysql2.createConnection({
-    host:"localhost",
-    user:config.DB_NAME,
-    password:config.DB_PASSWORD,
-    // database:"rent-a-car",
-    
-});
+import knex from "knex"
+import config from "./knexfile"
+const connection = knex(config.development)
 
 export default connection

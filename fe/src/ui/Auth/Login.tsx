@@ -1,28 +1,48 @@
 import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input } from 'antd';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { useLoginUserMutation } from '../../store/user/userStore';
+import { useMessageApi } from '../components/Message/MessageProvider';
+import { Cookies } from 'typescript-cookie';
 
 type FieldType = {
-  email?: string;
-  password?: string;
-  remember?: string;
+  email: string;
+  password: string;
+  remember: boolean;
 };
 
-const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-  console.log('Success:', values);
-};
+export default function Login(){
+  const {success,error} = useMessageApi()
+  const navigate = useNavigate()
 
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
+  const [login,resLogin] = useLoginUserMutation()
 
- export default function Login(){
+  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+    console.log('Success:', values);
+    await login(values).unwrap()
+    .then((res) => {
+      console.log("REMEMBEERÇÇÇ:::",values.remember);
+      // console.log("RES",res);
+      Cookies.set("token",res.token as string)
+      success("Login Succes")
+      navigate(0)
+      
+    })
+    .catch((Err) => {      
+      error(Err.data.message)
+    })
+
+  };
+
+  const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
+
   return (<div className='flex w-full h-[90vh] justify-center items-center '>
     <Form
     name="basic"
     layout={'vertical'}
-    // labelCol={{ span: 8 }}
-    // wrapperCol={{ span: 16 }}
     style={{ width:"50vh" }}
     initialValues={{ remember: true }}
     onFinish={onFinish}

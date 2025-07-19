@@ -1,35 +1,46 @@
 import type { FormProps } from 'antd';
 import { Button, Form, Input, Select } from 'antd';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { useCreateUserMutation } from '../../store/user/userStore';
+import { useMessageApi } from '../components/Message/MessageProvider';
 
 type FieldType = {
-  name?:string,
-  surname?:string,
-  email?: string;
-  password?: string;
-  passwordConfirm?: string;
-  gender?: string;
+  name:string,
+  surname:string,
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  gender: string;
 };
 
-const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-  console.log('Success:', values);
-};
 
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
+export default function Register(){
+  const navigate = useNavigate()
+  const {success } = useMessageApi()
+  const [createUser,resCreateUser] = useCreateUserMutation()
 
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
+  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+    console.log('Success:', values);
+    await createUser(values).unwrap()
+    .then(() => {
+      success("User Created")
+      navigate("/login")
+    })
+  };
 
- export default function Register(){
+  const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+
+
   return (<div className='flex w-full h-[90vh] justify-center items-center '>
     <Form
     name="basic"
     layout={'vertical'}
-    // labelCol={{ span: 8 }}
-    // wrapperCol={{ span: 16 }}
     style={{ width:"50vh" }}
     initialValues={{ remember: true }}
     onFinish={onFinish}
@@ -71,7 +82,17 @@ const handleChange = (value: string) => {
     <Form.Item<FieldType>
       label="Password Confirm"
       name="passwordConfirm"
-      rules={[{ required: true, message: 'Please input your password!' }]}
+      rules={[
+        { required: true, message: 'Please input your password!' },
+        ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('The new password that you entered do not match!'));
+            },
+          }),
+      ]}
     >
       <Input.Password placeholder='Password' />
     </Form.Item>
@@ -104,5 +125,6 @@ const handleChange = (value: string) => {
         </Link>
         </Form.Item>
     </div>
-  </Form></div>)
+  </Form>
+  </div>)
 }

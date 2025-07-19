@@ -18,20 +18,26 @@ import AdminDashboard from './ui/Admin/AdminDashboard'
 import AdminUserList from './ui/Admin/AdminUserList'
 import AdminAddUser from './ui/Admin/AdminAddUser'
 import AdminAddCar from './ui/Admin/AdminAddCar'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
+import MessageProvider from './ui/components/Message/MessageProvider'
+import ProtectedRoute from './utils/ProtectedRoute'
+import UnauthorizedRoute from './utils/UnauthorizedRoute'
 
 export default function App() {
   
   return (
-    <>
+    <Provider store={store}>
+      <MessageProvider>
     <Header/>
     <Routes>
       <Route path="/" element={<Home/>} />
       <Route path="/home" element={<Home/>} />
-      <Route path="/login" element={<Login/>} />
+      <Route path="/login" element={<UnauthorizedRoute><Login/></UnauthorizedRoute>} />
       <Route path="/register" element={<Register/>} />
       <Route path="/about" element={<About/>} />
       <Route path="/contact" element={<Contact/>} />
-      <Route path="/profile" element={<Profile/>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
       <Route path="/userDashboard" element={<UserDashboard/>} />
       <Route path="/resetPassword" element={<ResetPassword/>} />
       <Route path="/vehicles" element={<Vehicles/>} />
@@ -45,7 +51,8 @@ export default function App() {
       <Route path="/admin/addCar" element={<AdminAddCar/>} />
     </Routes>
     <Footer/>
-    </>
+    </MessageProvider>
+    </Provider>
   )
 }
 

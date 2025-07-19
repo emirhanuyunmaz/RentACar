@@ -1,5 +1,7 @@
 import { Button, Form, Input, Select, type FormProps } from "antd";
 import UserLeftBar from "../components/UserLeftBar/UserLeftBar";
+import { useGetProfileQuery } from "../../store/user/userStore";
+import { useEffect } from "react";
 
 type FieldType = {
   name?:string,
@@ -22,21 +24,29 @@ const handleChange = (value: string) => {
 };
 
 export default function Profile(){
+    const {data,isSuccess} = useGetProfileQuery("")
+    const [form] = Form.useForm()
+
+    useEffect(() => {
+        if(isSuccess){
+            form.setFieldsValue(data)
+            console.log("ASDDSA:",data);
+        }
+    },[isSuccess,data])
 
 
     return(<div className="relative">
-    <div className="absolute">
+    <div className=" fixed">
         <UserLeftBar/>
     </div>
 
-    <div className="max-w-7xl mx-auto">
+    <div className="ml-20 md:ml-32 max-w-7xl mx-auto">
         
         <div className="flex justify-center items-center h-14 bg-linear-to-r from-cyan-500 to-blue-500 my-5 rounded-xl">
             <p className="text-white">Hello User</p>
         </div>
 
-
-        <div className="">
+        {/* <div className="">
             <div className="flex items-center gap-4">
                 <img src="https://randomuser.me/api/portraits/men/78.jpg" alt="User Image" className="w-32 h-32 rounded-full" />
                 <div className="flex flex-col gap-3">
@@ -44,13 +54,13 @@ export default function Profile(){
                     <p>test@gmail.com</p>
                 </div>
             </div>
-        </div>
+        </div> */}   
 
         <div className="w-full">
             <Form
+                form={form}
                 name="basic"
                 layout={'vertical'}
-                initialValues={{ remember: true }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
