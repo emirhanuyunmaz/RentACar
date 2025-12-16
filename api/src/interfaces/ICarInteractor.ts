@@ -13,4 +13,6 @@ export interface ICarInteractor {
   updateCar(car: Car): Promise<Car>;
   listCar(): Promise<Car[] | []>;
   getEquipmentList(): Promise<CarEquipment[]>;
+  getAllCars(page: number): Promise<Car[]>;
+  carCount(): Promise<Number>;
 }

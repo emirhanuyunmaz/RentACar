@@ -19,12 +19,12 @@ export class UserRepository implements IUserRepository {
       return false;
     }
   }
-  
+
   async findUser(id: string): Promise<User> {
     const data = await db('users').where('id', id).first();
     return data;
   }
-  
+
   async loginUser({
     email,
     password,
@@ -33,12 +33,12 @@ export class UserRepository implements IUserRepository {
     password: string;
   }): Promise<User> {
     const data = await db('users')
-    .where('email', email)
-    .where('password', password)
-    .first();
+      .where('email', email)
+      .where('password', password)
+      .first();
     return data;
   }
-  
+
   async updateUser({ id, data }: { id: String; data: User }): Promise<User> {
     const user = await db('users').where('id', id).first();
     if (user) {
@@ -47,35 +47,31 @@ export class UserRepository implements IUserRepository {
     }
     throw new Error('User Not Found');
   }
-  
+
   async getAllUser(page: number): Promise<User[]> {
     const limit = 5;
     if (page) {
       const data = await db('users')
-      .orderBy('created_at')
-      .offset((page - 1) * limit)
-      .limit(limit);
+        .orderBy('created_at')
+        .offset((page - 1) * limit)
+        .limit(limit);
       return data;
     } else {
       const data = await db('users')
-      .orderBy('created_at')
-      .offset(0 * limit)
-      .limit(limit);
+        .orderBy('created_at')
+        .offset(0 * limit)
+        .limit(limit);
       return data;
     }
   }
-  
-  async deleteUser(id:string): Promise<User> {
-    const user = await db('users')
-    .where('id', id)
-    .first();
-    
-    return user
+
+  async deleteUser(id: string): Promise<User> {
+    const user = await db('users').where('id', id).first();
+    return user;
   }
   async userCount(): Promise<Number> {
-    const count = await db("users")
-    .count<Record<string, any>>("id as total")
-    
-    return count[0]["total"];
+    const count =
+      await db('users').count<Record<string, { total: number }>>('id as total');
+    return count[0]['total'];
   }
 }

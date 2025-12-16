@@ -1,9 +1,9 @@
 import { Button, Input, Pagination, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
-import { Link, useParams, useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { useGetAllUserQuery } from '../../store/user/userStore';
-import { ArrowUpOutlined, DeleteOutlined, FileOutlined } from '@ant-design/icons';
+import {  FileOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
 interface DataType {
@@ -65,11 +65,8 @@ export default function AdminUserList () {
   
   const [page,setPage] = useState(searchParams.get("page") ?? 1)
   const getAllUser = useGetAllUserQuery(page)
-  console.log(searchParams.get("page"));
-  console.log(getAllUser.data?.count);
 
   function changePage(clickPage:number){
-    console.log("Click Page:::",clickPage);
     setSearchParams(`?page=${clickPage.toString()}`)
     setPage(clickPage)
   }

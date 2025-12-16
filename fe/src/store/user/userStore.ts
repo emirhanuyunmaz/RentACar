@@ -44,7 +44,6 @@ export const userApi = createApi({
 
     getAllUser:builder.query<any,any>({
       query : (page:number) => `/getAllUser?page=${page}`,
-      
     }),
 
 

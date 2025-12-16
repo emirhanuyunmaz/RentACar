@@ -80,4 +80,21 @@ export class CarController {
       next(err);
     }
   }
+
+  async getAllCars(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const page = Number(req.query.page);
+      const data = await this.interactor.getAllCars(page);
+      const count = await this.interactor.carCount()
+      console.log("CO:",count);
+      
+      res.status(200).json({ message: 'Success', data ,count});
+    } catch (err) {
+      next(err);
+    }
+  }
 }

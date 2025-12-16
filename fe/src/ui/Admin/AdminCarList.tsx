@@ -1,64 +1,63 @@
-import React from 'react';
-import { Button, Input, Table } from 'antd';
+import React, { useState } from 'react';
+import { Button, Input, Pagination, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
+import { useGetAllCarListQuery } from '../../store/car/carStore';
+import { FileOutlined, SignatureOutlined } from '@ant-design/icons';
 
 interface DataType {
   key: React.Key;
-  name: string;
-  age: number;
-  address: string;
+  id : string;
+  title : string;
+  price : number;
+  distance:number;
+  created_at:Date;
 }
 
 const columns: TableColumnsType<DataType> = [
   {
-    title: 'Full Name',
+    title: 'ID',
     width: 100,
-    dataIndex: 'name',
+    dataIndex: 'id',
     fixed: 'left',
   },
   {
-    title: 'Age',
+    title: 'Title',
     width: 100,
-    dataIndex: 'age',
-  },
-  { title: 'Column 1', dataIndex: 'address', key: '1', },
-  { title: 'Column 2', dataIndex: 'address', key: '2' },
-  { title: 'Column 3', dataIndex: 'address', key: '3' },
-  { title: 'Column 4', dataIndex: 'address', key: '4' },
-  { title: 'Column 5', dataIndex: 'address', key: '5' },
-  { title: 'Column 6', dataIndex: 'address', key: '6' },
-  { title: 'Column 7', dataIndex: 'address', key: '7' },
-  { title: 'Column 8', dataIndex: 'address', key: '8' },
-
-  {
-    title: 'Action 1',
-    fixed: 'right',
-    width: 90,
-    render: () => <a>action</a>,
+    dataIndex: 'title',
   },
   {
-    title: 'Action 2',
-    fixed: 'right',
-    width: 90,
-    render: () => <a>action</a>,
+    title: 'Price',
+    width: 100,
+    dataIndex: 'price',
   },
   {
-    title: 'Action 2',
+    title: 'Update',
     fixed: 'right',
     width: 90,
-    render: () => <a>action</a>,
+    render: () => <a><SignatureOutlined /></a>,
+  },
+  {
+    title: 'Show',
+    fixed: 'right',
+    width: 90,
+    render: () => <a><FileOutlined /></a>,
   },
   
 ];
 
-const dataSource: DataType[] = [
-  { key: '1', name: 'Olivia', age: 32, address: 'New York Park' },
-  { key: '2', name: 'Ethan', age: 40, address: 'London Park' },
-];
 
 export default function AdminCarList () {
+  const [searchParams,setSearchParams] = useSearchParams()
+  
+  const [page,setPage] = useState(searchParams.get("page") ?? 1)
+  const getAllCarList = useGetAllCarListQuery(page)
+  
+  function changePage(clickPage:number){
+    setSearchParams(`?page=${clickPage.toString()}`)
+    setPage(clickPage)
+  }
   
   return (
     <div className="min-h-[80vh] flex gap-3">
@@ -80,10 +79,13 @@ export default function AdminCarList () {
                         bordered
                         className={``}
                         columns={columns}
-                        dataSource={dataSource}
+                        dataSource={getAllCarList.data?.data}
                         scroll={{ x: 'max-content' }}
                         pagination={false}
                     />
+                    <div className='flex justify-center mt-3'>
+                       <Pagination defaultCurrent={1} total={getAllCarList.data?.count / 5 * 10 } onChange={(e) => changePage(e.valueOf())} />
+                    </div>
                 </div>
             </div>
     

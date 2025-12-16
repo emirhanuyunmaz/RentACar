@@ -17,7 +17,7 @@ export class UserInteractor implements IUserInteractor {
     this.repository = repository;
     this.token = token;
   }
-  
+
   async loginUser({
     email,
     password,
@@ -28,7 +28,7 @@ export class UserInteractor implements IUserInteractor {
     const data = await this.repository.loginUser({ email, password });
     if (data) {
       console.log('data', data);
-      
+
       const userToken = this.token.createToken({
         id: data.id!,
         admin: data.isAdmin,
@@ -37,26 +37,26 @@ export class UserInteractor implements IUserInteractor {
     }
     return undefined;
   }
-  
+
   async createUser(data: User): Promise<Boolean> {
     return await this.repository.createUser(data);
   }
   async findUser(id: string): Promise<User> {
     return await this.repository.findUser(id);
   }
-  
+
   async updateUser({ id, data }: { id: String; data: User }): Promise<User> {
     return await this.repository.updateUser({ id, data });
   }
-  
+
   deleteUser(): Promise<User> {
     throw new Error('Method not implemented.');
   }
-  
+
   async getAllUser(page: number): Promise<User[]> {
     return await this.repository.getAllUser(page);
   }
-  
+
   async userCount(): Promise<Number> {
     return await this.repository.userCount();
   }

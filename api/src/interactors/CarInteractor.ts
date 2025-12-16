@@ -15,7 +15,7 @@ export class CarInteractor implements ICarInteractor {
   ) {
     this.repository = repository;
   }
-
+  
   createCar(
     car: Car,
     images: CarImages[],
@@ -23,7 +23,7 @@ export class CarInteractor implements ICarInteractor {
   ): Promise<Boolean> {
     return this.repository.createCar(car, images, car_equipment);
   }
-
+  
   async getEquipmentList(): Promise<CarEquipment[]> {
     return await this.repository.getEquipmentList();
   }
@@ -39,7 +39,13 @@ export class CarInteractor implements ICarInteractor {
   async listCar(): Promise<Car[] | []> {
     const cc = await this.repository.listCar();
     console.log('DDDDDDD:', cc);
-
     return cc;
+  }
+  async getAllCars(page: number): Promise<Car[]> {
+    return await this.repository.getAllCars(page);
+  }
+
+  async carCount(): Promise<Number> {
+    return await this.repository.carCount();
   }
 }

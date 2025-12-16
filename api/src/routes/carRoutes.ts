@@ -46,6 +46,11 @@ const authControl = container.get<AuthControl>(INTERFACE_TYPE.AuthControl);
 
 const controller = container.get<CarController>(INTERFACE_TYPE.CarController);
 router.get('/deneme', controller.adminDeneme.bind(controller));
+router.get(
+  '/getAllCars',
+  authControl.tokenControl.bind(authControl),
+  controller.getAllCars.bind(controller)
+);
 router.get('/carList', controller.getCarList.bind(controller));
 router.get('/carEquipmentList', controller.getEquipmentList.bind(controller));
 router.post(

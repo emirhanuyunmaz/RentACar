@@ -25,7 +25,7 @@ export class CarRepository implements ICarRepository {
           carEquipment: car.carEquipment,
         });
         const insertedCarId = carId[0];
-
+        
         if (images && images.length > 0) {
           const imageData = images.map((img) => ({
             car_id: insertedCarId,
@@ -42,9 +42,9 @@ export class CarRepository implements ICarRepository {
           await trx('car_equipment').insert(car_equipmentData);
         }
       });
-
+      
       console.log('RESİM VE ARABA KAYITI BAŞARILOI');
-
+      
       return true;
     } catch (err) {
       // return false
@@ -63,45 +63,72 @@ export class CarRepository implements ICarRepository {
   async listCar(): Promise<Car[] | [] | any> {
     // IMAGES alt sorgu
     const imgsAgg = db('car_images as ci')
-      .select('ci.car_id')
-      .select(
-        db.raw(`
-      JSON_ARRAYAGG(
-        JSON_OBJECT('id', ci.id, 'name', ci.name, 'link', ci.link)
-      ) AS images
-    `)
-      )
-      .groupBy('ci.car_id')
-      .as('imgs');
+    .select('ci.car_id')
+    .select(
+      db.raw(`
+        JSON_ARRAYAGG(
+          JSON_OBJECT('id', ci.id, 'name', ci.name, 'link', ci.link)
+          ) AS images
+          `)
+        )
+        .groupBy('ci.car_id')
+        .as('imgs');
+        
+        // EQUIPMENT alt sorgu
+        const eqsAgg = db('car_equipment as ce')
+        .join('equipment as e', 'e.id', 'ce.equipment_id')
+        .select('ce.car_id')
+        .select(
+          db.raw(`
+            JSON_ARRAYAGG(
+              JSON_OBJECT('id', e.id, 'value', e.value)
+              ) AS equipment
+              `)
+            )
+            .groupBy('ce.car_id')
+            .as('eqs');
+            
+            // ANA SORGU
+            const rows = await db('cars as c')
+            .leftJoin(imgsAgg, 'imgs.car_id', 'c.id')
+            .leftJoin(eqsAgg, 'eqs.car_id', 'c.id')
+            .select('c.*')
+            .select(db.raw('COALESCE(imgs.images, JSON_ARRAY())   AS images'))
+            .select(db.raw('COALESCE(eqs.equipment, JSON_ARRAY()) AS equipment'));
+            return rows;
+          }
+          
+          async getEquipmentList(): Promise<CarEquipment[]> {
+            const data = await db('equipment').select('*');
+            console.log('ASDSA:', data);
+            
+            return data;
+          }
+          
+          async getAllCars(page: number): Promise<Car[]> {
+            const limit = 5;
+            if (page) {
+              const data = await db('cars')
+              .orderBy('created_at')
+              .offset((page - 1) * limit)
+              .limit(limit);
+              return data;
+            } else {
+              const data = await db('cars')
+              .orderBy('created_at')
+              .offset(0 * limit)
+              .limit(limit);
+              return data;
+            }
+          }
 
-    // EQUIPMENT alt sorgu
-    const eqsAgg = db('car_equipment as ce')
-      .join('equipment as e', 'e.id', 'ce.equipment_id')
-      .select('ce.car_id')
-      .select(
-        db.raw(`
-      JSON_ARRAYAGG(
-        JSON_OBJECT('id', e.id, 'value', e.value)
-      ) AS equipment
-    `)
-      )
-      .groupBy('ce.car_id')
-      .as('eqs');
+          async carCount(): Promise<Number> {
+            const count = await db("cars")
+            .count<Record<string,{total:number}>>("id as total")
+            console.log("CAR TOTAL:",count[0].total);
+            
+            return count[0].total;
+          }
 
-    // ANA SORGU
-    const rows = await db('cars as c')
-      .leftJoin(imgsAgg, 'imgs.car_id', 'c.id')
-      .leftJoin(eqsAgg, 'eqs.car_id', 'c.id')
-      .select('c.*')
-      .select(db.raw('COALESCE(imgs.images, JSON_ARRAY())   AS images'))
-      .select(db.raw('COALESCE(eqs.equipment, JSON_ARRAY()) AS equipment'));
-    return rows;
-  }
-
-  async getEquipmentList(): Promise<CarEquipment[]> {
-    const data = await db('equipment').select('*');
-    console.log('ASDSA:', data);
-
-    return data;
-  }
-}
+        }
+        

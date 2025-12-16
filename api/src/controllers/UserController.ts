@@ -87,19 +87,16 @@ export class UserController {
   ): Promise<any> {
     try {
       const isAdmin = req.headers.admin;
-      if(isAdmin == 'true'){
+      if (isAdmin == 'true') {
         const page = Number(req.query.page);
         const data = await this.interactor.getAllUser(page);
-        const count = await this.interactor.userCount()
-        console.log("CCC:",count);
-        
-        return res.status(200).json({ message: 'Success' ,data,count});
-      }
-      else{
+        const count = await this.interactor.userCount();
+        return res.status(200).json({ message: 'Success', data, count });
+      } else {
         return res.status(401).json({ message: 'ERROR : Not Authorized' });
       }
     } catch (err) {
-      next(err)
+      next(err);
     }
   }
 }

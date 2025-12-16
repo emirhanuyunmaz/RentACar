@@ -29,6 +29,10 @@ export const carApi = createApi({
             })
         }),
 
+        getAllCarList:builder.query<any,any>({
+            query : (page) => `/getAllCars?page=${page}`
+        })
+
     })
 })
-export const {useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery} = carApi
+export const {useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery} = carApi
