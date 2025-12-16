@@ -39,14 +39,14 @@ export default function Register(){
 
   return (<div className='flex w-full h-[90vh] justify-center items-center '>
     <Form
-    name="basic"
-    layout={'vertical'}
-    style={{ width:"50vh" }}
-    initialValues={{ remember: true }}
-    onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
-    autoComplete="off"
-  >
+      name="basic"
+      layout={'vertical'}
+      style={{ width:"50vh" }}
+      initialValues={{ remember: true }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off"
+    >
     <Form.Item<FieldType>
       label="Name"
       name="name"

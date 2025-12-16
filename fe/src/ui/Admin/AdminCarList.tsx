@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Input, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
+import { Link } from 'react-router';
 
 interface DataType {
   key: React.Key;
@@ -67,8 +68,9 @@ export default function AdminCarList () {
                 </div>
 
                 <div className='w-[85%] px-10 overflow-y-auto flex flex-col gap-3'>
-                    <div>
-                        <h1>Car List</h1>
+                    <div className='flex justify-between'>
+                        <h1 className='text-2xl font-bold'>Car List</h1>
+                        <Link to={`/admin/addCar`} className='border border-gray-300 px-3 py-1 rounded-xl hover:border-black transition-all' >+Add Car</Link>
                     </div>
                     <div className='flex gap-3'>
                         <Input/>

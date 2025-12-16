@@ -13,8 +13,8 @@ export default function ProtectedRoute({children}:{children:React.ReactNode}){
             console.log("Token bilgisi yok")
             navigate("/login")
         }else{
-            // const verfiy_token = jwtDecode(token as string)
-            // console.log(verfiy_token);
+            const verfiy_token = jwtDecode<{id:string,admin:boolean}>(token as string)
+            console.log("ADSDSA:",verfiy_token.admin);
         }
     },[])
     return(<>{children}</>)

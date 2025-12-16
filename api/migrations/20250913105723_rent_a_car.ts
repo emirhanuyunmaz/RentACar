@@ -1,0 +1,85 @@
+import type { Knex } from 'knex';
+
+export async function up(knex: Knex): Promise<void> {
+  // users
+  await knex.schema
+    .createTable('users', (table) => {
+      table.uuid('id').primary().unique().defaultTo(knex.raw('(UUID())'));
+      table.string('name', 100).notNullable();
+      table.string('surname', 150).notNullable();
+      table.string('email', 150).notNullable().unique();
+      table.string('password', 255).notNullable();
+      table.string('gender', 32).notNullable();
+      table.boolean('isAdmin').notNullable().defaultTo(false);
+      table.timestamp('created_at').defaultTo(knex.fn.now());
+    })
+    .then(() => console.log('User Table created'));
+
+  // cars
+  await knex.schema
+    .createTable('cars', (table) => {
+      table.uuid('id').primary().unique();
+      table.string('title', 150).notNullable();
+
+      // fiyatlar için double
+      table.double('price').notNullable();
+
+      table.string('gearBox').notNullable();
+      table.boolean('airConditioner').notNullable().defaultTo(false);
+      table.string('fuer', 100).notNullable();
+
+      // kapı ve koltuk sayısı → integer
+      table.integer('doors').notNullable();
+      table.integer('seats').notNullable();
+
+      // km → integer veya float
+      table.integer('distance').notNullable();
+
+      table.timestamps(true, true);
+    })
+    .then(() => console.log('Car Table created'));
+
+  // car-images
+  await knex.schema
+    .createTable('car_images', (table) => {
+      table.uuid('id').primary().unique();
+
+      table.uuid('car_id').references('id').inTable('cars').onDelete('CASCADE');
+
+      table.string('name').notNullable();
+      table.string('link').notNullable();
+    })
+    .then(() => console.log('Car Images Table created'));
+
+  // equipment
+  await knex.schema
+    .createTable('equipment', (table) => {
+      table.uuid('id').primary().unique();
+      table.string('value').notNullable();
+    })
+    .then(() => console.log('Equipment Table created'));
+
+  // car-equipment (junction)
+  await knex.schema
+    .createTable('car_equipment', (table) => {
+      table.uuid('id').primary().unique();
+
+      table.uuid('car_id').references('id').inTable('cars').onDelete('CASCADE');
+
+      table
+        .uuid('equipment_id')
+        .references('id')
+        .inTable('equipment')
+        .onDelete('CASCADE');
+    })
+    .then(() => console.log('Car Equipment Table created'));
+}
+
+export async function down(knex: Knex): Promise<void> {
+  // ilişkili tabloları tersten silmek lazım
+  await knex.schema.dropTableIfExists('car_equipment');
+  await knex.schema.dropTableIfExists('equipment');
+  await knex.schema.dropTableIfExists('car_images');
+  await knex.schema.dropTableIfExists('cars');
+  await knex.schema.dropTableIfExists('users');
+}

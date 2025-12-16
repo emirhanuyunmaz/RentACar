@@ -1,64 +1,79 @@
-import React from 'react';
-import { Button, Input, Table } from 'antd';
+import { Button, Input, Pagination, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
-import { Link } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
+import { useGetAllUserQuery } from '../../store/user/userStore';
+import { ArrowUpOutlined, DeleteOutlined, FileOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 interface DataType {
-  key: React.Key;
+  id: React.Key;
   name: string;
-  age: number;
-  address: string;
+  surname: string;
+  email:string;
+  gender: string;
+  created_at:Date
 }
 
 const columns: TableColumnsType<DataType> = [
   {
-    title: 'Full Name',
+    title: 'ID',
     width: 100,
-    dataIndex: 'name',
+    dataIndex: 'id',
     fixed: 'left',
   },
   {
-    title: 'Age',
+    title: 'Name',
     width: 100,
-    dataIndex: 'age',
+    dataIndex: 'name',
   },
-  { title: 'Column 1', dataIndex: 'address', key: '1', },
-  { title: 'Column 2', dataIndex: 'address', key: '2' },
-  { title: 'Column 3', dataIndex: 'address', key: '3' },
-  { title: 'Column 4', dataIndex: 'address', key: '4' },
-  { title: 'Column 5', dataIndex: 'address', key: '5' },
-  { title: 'Column 6', dataIndex: 'address', key: '6' },
-  { title: 'Column 7', dataIndex: 'address', key: '7' },
-  { title: 'Column 8', dataIndex: 'address', key: '8' },
+  {
+    title: 'Surname',
+    width: 100,
+    dataIndex: 'surname',
+  },
+  {
+    title: 'Email',
+    width: 100,
+    dataIndex: 'email',
+  },
+  {
+    title: 'Gender',
+    width: 100,
+    dataIndex: 'gender',
+  },
+  {
+    title: 'Create At',
+    width: 100,
+    dataIndex: 'created_at',
+    fixed: 'left',
 
-  {
-    title: 'Action 1',
-    fixed: 'right',
-    width: 90,
-    render: () => <a>action</a>,
   },
   {
-    title: 'Action 2',
+    title: 'Show Profile',
     fixed: 'right',
     width: 90,
-    render: () => <a>action</a>,
-  },
-  {
-    title: 'Action 2',
-    fixed: 'right',
-    width: 90,
-    render: () => <a>action</a>,
+    render: () => <a><FileOutlined /></a>,
   },
   
 ];
 
-const dataSource: DataType[] = [
-  { key: '1', name: 'Olivia', age: 32, address: 'New York Park' },
-  { key: '2', name: 'Ethan', age: 40, address: 'London Park' },
-];
+
 
 export default function AdminUserList () {
+  const [searchParams,setSearchParams] = useSearchParams()
+  
+  const [page,setPage] = useState(searchParams.get("page") ?? 1)
+  const getAllUser = useGetAllUserQuery(page)
+  console.log(searchParams.get("page"));
+  console.log(getAllUser.data?.count);
+
+  function changePage(clickPage:number){
+    console.log("Click Page:::",clickPage);
+    setSearchParams(`?page=${clickPage.toString()}`)
+    setPage(clickPage)
+  }
+  
   
   return (
     <div className="min-h-[80vh] flex gap-3">
@@ -67,8 +82,9 @@ export default function AdminUserList () {
                 </div>
 
                 <div className='w-[80%] px-10 overflow-y-auto flex flex-col gap-3'>
-                    <div>
-                        <Link to={`/admin/addUser`}>
+                    <div className='flex justify-between'>
+                      <h1 className='text-2xl font-bold'>User List</h1>
+                        <Link to={`/admin/addUser`} className='border border-gray-300 px-3 py-1 rounded-xl hover:border-black transition-all'>
                           +Add User
                         </Link>
                         
@@ -81,10 +97,13 @@ export default function AdminUserList () {
                         bordered
                         className={``}
                         columns={columns}
-                        dataSource={dataSource}
+                        dataSource={getAllUser.data?.data}
                         scroll={{ x: 'max-content' }}
                         pagination={false}
                     />
+                    <div className='flex justify-center mt-3'>
+                      <Pagination defaultCurrent={1} total={getAllUser.data?.count / 5 * 10} onChange={(e) => changePage(e.valueOf())} />
+                    </div>
                 </div>
             </div>
     

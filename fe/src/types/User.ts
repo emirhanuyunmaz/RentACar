@@ -30,3 +30,11 @@ export type userProfile = {
     gender:string,
     // isAdmin:Number
 }
+
+export type userUpdatePut = {
+    name?:string,
+  surname?:string,
+  email?: string;
+  password?: string;
+  gender?: string;
+}

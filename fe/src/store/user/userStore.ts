@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { UserCreateGetType, UserCreatePostType, UserLoginGetType, UserLoginPostType, userProfile } from '../../types/User'
+import type { UserCreateGetType, UserCreatePostType, UserLoginGetType, UserLoginPostType, userProfile, userUpdatePut } from '../../types/User'
 import { Cookies } from 'typescript-cookie'
 
 export const userApi = createApi({
@@ -34,8 +34,21 @@ export const userApi = createApi({
       query: () => `/profile`,
     }),
 
+    updateUser:builder.mutation<any,userUpdatePut>({
+      query:(body) => ({
+        url:"/update",
+        method:"PUT",
+        body:body
+      })
+    }),
+
+    getAllUser:builder.query<any,any>({
+      query : (page:number) => `/getAllUser?page=${page}`,
+      
+    }),
+
 
   }),
 })
 
-export const { useDenemeQuery , useCreateUserMutation , useLoginUserMutation , useGetProfileQuery} = userApi
+export const { useDenemeQuery , useCreateUserMutation , useLoginUserMutation , useGetProfileQuery , useUpdateUserMutation , useGetAllUserQuery} = userApi

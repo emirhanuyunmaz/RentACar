@@ -1,6 +1,6 @@
 import { Button, Form, Input, Select, type FormProps } from "antd";
 import UserLeftBar from "../components/UserLeftBar/UserLeftBar";
-import { useGetProfileQuery } from "../../store/user/userStore";
+import { useGetProfileQuery, useUpdateUserMutation } from "../../store/user/userStore";
 import { useEffect } from "react";
 
 type FieldType = {
@@ -11,21 +11,31 @@ type FieldType = {
   gender?: string;
 };
 
-const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-  console.log('Success:', values);
-};
-
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
-
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
 
 export default function Profile(){
     const {data,isSuccess} = useGetProfileQuery("")
     const [form] = Form.useForm()
+    const [updateUser,setUpdateUser] = useUpdateUserMutation()
+    
+    const onFinish: FormProps<FieldType>['onFinish'] = async(values) => {
+        await updateUser(values).unwrap()
+        .then((res) => {
+            console.log("SUCCES:",res);
+            
+        }).catch((err) => {
+            console.log("ERR:",err);
+            
+        })
+        
+    };
+    
+    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+      console.log('Failed:', errorInfo);
+    };
+    
+    const handleChange = (value: string) => {
+      console.log(`selected ${value}`);
+    };
 
     useEffect(() => {
         if(isSuccess){
@@ -34,6 +44,7 @@ export default function Profile(){
         }
     },[isSuccess,data])
 
+    
 
     return(<div className="relative">
     <div className=" fixed">
@@ -44,17 +55,7 @@ export default function Profile(){
         
         <div className="flex justify-center items-center h-14 bg-linear-to-r from-cyan-500 to-blue-500 my-5 rounded-xl">
             <p className="text-white">Hello User</p>
-        </div>
-
-        {/* <div className="">
-            <div className="flex items-center gap-4">
-                <img src="https://randomuser.me/api/portraits/men/78.jpg" alt="User Image" className="w-32 h-32 rounded-full" />
-                <div className="flex flex-col gap-3">
-                    <p>Name Surname</p>
-                    <p>test@gmail.com</p>
-                </div>
-            </div>
-        </div> */}   
+        </div>  
 
         <div className="w-full">
             <Form

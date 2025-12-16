@@ -1,0 +1,107 @@
+import { Car } from '../entities/Car';
+import { CarImages } from '../entities/CarImages';
+import { ICarRepository } from '../interfaces/ICarRepositoy';
+import db from '../../dbConnection';
+import { injectable } from 'inversify';
+import { CarEquipment } from '../entities/CarEquipment';
+
+@injectable()
+export class CarRepository implements ICarRepository {
+  async createCar(
+    car: Car,
+    images: CarImages[],
+    car_equipment: CarEquipment[]
+  ): Promise<Boolean> {
+    try {
+      await db.transaction(async (trx) => {
+        const carId = await trx('cars').insert({
+          title: car.title,
+          price: car.price,
+          gearBox: car.gearBox,
+          fuer: car.fuer,
+          doors: car.doors,
+          seats: car.seats,
+          distance: car.distance,
+          carEquipment: car.carEquipment,
+        });
+        const insertedCarId = carId[0];
+
+        if (images && images.length > 0) {
+          const imageData = images.map((img) => ({
+            car_id: insertedCarId,
+            link: img.link,
+            name: img.name,
+          }));
+          await trx('car_images').insert(imageData);
+        }
+        if (car_equipment && car_equipment.length > 0) {
+          const car_equipmentData = car_equipment.map((data) => ({
+            car_id: insertedCarId,
+            equipment_id: data.id,
+          }));
+          await trx('car_equipment').insert(car_equipmentData);
+        }
+      });
+
+      console.log('RESİM VE ARABA KAYITI BAŞARILOI');
+
+      return true;
+    } catch (err) {
+      // return false
+      throw new Error(('Car create error :' + err) as string);
+    }
+  }
+  getCar(id: string): Promise<Car> {
+    throw new Error('Method not implemented.');
+  }
+  deleteCar(id: string): Promise<Boolean> {
+    throw new Error('Method not implemented.');
+  }
+  updateCar(car: Car): Promise<Car> {
+    throw new Error('Method not implemented.');
+  }
+  async listCar(): Promise<Car[] | [] | any> {
+    // IMAGES alt sorgu
+    const imgsAgg = db('car_images as ci')
+      .select('ci.car_id')
+      .select(
+        db.raw(`
+      JSON_ARRAYAGG(
+        JSON_OBJECT('id', ci.id, 'name', ci.name, 'link', ci.link)
+      ) AS images
+    `)
+      )
+      .groupBy('ci.car_id')
+      .as('imgs');
+
+    // EQUIPMENT alt sorgu
+    const eqsAgg = db('car_equipment as ce')
+      .join('equipment as e', 'e.id', 'ce.equipment_id')
+      .select('ce.car_id')
+      .select(
+        db.raw(`
+      JSON_ARRAYAGG(
+        JSON_OBJECT('id', e.id, 'value', e.value)
+      ) AS equipment
+    `)
+      )
+      .groupBy('ce.car_id')
+      .as('eqs');
+
+    // ANA SORGU
+    const rows = await db('cars as c')
+      .leftJoin(imgsAgg, 'imgs.car_id', 'c.id')
+      .leftJoin(eqsAgg, 'eqs.car_id', 'c.id')
+      .select('c.*')
+      .select(db.raw('COALESCE(imgs.images, JSON_ARRAY())   AS images'))
+      .select(db.raw('COALESCE(eqs.equipment, JSON_ARRAY()) AS equipment'));
+    return rows;
+  }
+
+  async getEquipmentList(): Promise<CarEquipment[]> {
+    const data = await db('equipment').select('*');
+    console.log('ASDSA:', data);
+
+    return data;
+  }
+}

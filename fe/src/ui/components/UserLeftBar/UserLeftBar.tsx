@@ -1,4 +1,4 @@
-import { CarFilled, ProductFilled, UserOutlined } from "@ant-design/icons";
+import { ProductFilled, UserOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import { Link } from "react-router";
 

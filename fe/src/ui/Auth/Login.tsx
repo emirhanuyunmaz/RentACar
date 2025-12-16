@@ -21,12 +21,9 @@ export default function Login(){
     console.log('Success:', values);
     await login(values).unwrap()
     .then((res) => {
-      console.log("REMEMBEERÇÇÇ:::",values.remember);
-      // console.log("RES",res);
       Cookies.set("token",res.token as string)
       success("Login Succes")
       navigate(0)
-      
     })
     .catch((Err) => {      
       error(Err.data.message)

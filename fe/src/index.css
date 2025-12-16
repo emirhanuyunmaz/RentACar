@@ -3,4 +3,5 @@
 @theme {
   --color-primary: oklch(43.09% 0.187 281.40);
   --color-secondary: oklch(96.12% 0.000 0);
+  --color-card-bg: oklch(0.9612 0 0)
 }

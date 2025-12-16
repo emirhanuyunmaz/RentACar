@@ -23,6 +23,7 @@ import { store } from './store/store'
 import MessageProvider from './ui/components/Message/MessageProvider'
 import ProtectedRoute from './utils/ProtectedRoute'
 import UnauthorizedRoute from './utils/UnauthorizedRoute'
+import AdminProtectedRoute from './utils/AdminProtectedRoute'
 
 export default function App() {
   
@@ -42,7 +43,7 @@ export default function App() {
       <Route path="/resetPassword" element={<ResetPassword/>} />
       <Route path="/vehicles" element={<Vehicles/>} />
       <Route path="/vehicle/:id" element={<VehicleDetail/>} />
-      <Route path="/admin" element={<AdminHome/>} />
+      <Route path="/admin" element={<AdminProtectedRoute><AdminHome/></AdminProtectedRoute>} />
       <Route path="/admin/profile" element={<AdminProfile/>} />
       <Route path="/admin/dashboard" element={<AdminDashboard/>} />
       <Route path="/admin/carList" element={<AdminCarList/>} />
