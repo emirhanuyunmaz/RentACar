@@ -46,8 +46,21 @@ export const userApi = createApi({
       query : (page:number) => `/getAllUser?page=${page}`,
     }),
 
+    adminGetUser:builder.query<any,any>({
+      query:(id:string) => `/adminGetUserProfile?id=${id}`
+    }),
+
+    adminUpdateUser:builder.mutation<any,any>({
+      query:(body) => ({
+        url:"/adminUpdateUser",
+        method:"PUT",
+        body:body
+      })
+    }),
+
+
 
   }),
 })
 
-export const { useDenemeQuery , useCreateUserMutation , useLoginUserMutation , useGetProfileQuery , useUpdateUserMutation , useGetAllUserQuery} = userApi
+export const { useDenemeQuery , useCreateUserMutation , useLoginUserMutation , useGetProfileQuery , useUpdateUserMutation , useGetAllUserQuery , useAdminGetUserQuery , useAdminUpdateUserMutation} = userApi

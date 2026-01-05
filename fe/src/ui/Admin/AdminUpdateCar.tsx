@@ -1,38 +1,13 @@
 import type { FormProps, SelectProps, UploadFile } from 'antd';
-import { Button, Form, Input, InputNumber, Select, Tag } from "antd";
+import { Button, Form, Image, Input, InputNumber, Select, Tag } from "antd";
 import ImageUpload from "./components/ImageUpload";
 import { SaveOutlined } from "@ant-design/icons";
 import {  useEffect, useState } from 'react';
-import { useCarEquipmentListQuery, useCreateCarMutation } from '../../store/car/carStore';
+import { useAdminGetCarQuery, useCarEquipmentListQuery, useCreateCarMutation } from '../../store/car/carStore';
+import { useSearchParams } from 'react-router';
+// import { useDenemeCarQuery } from '../../store/car/carStore';
 
 type TagRender = SelectProps['tagRender'];
-
-// let options: SelectProps['options'] = [
-    // { value: "Air Conditioning" },
-    // { value: "Automatic Climate Control" },
-    // { value: "Navigation System" },
-    // { value: "Rear View Camera" },
-    // { value: "Parking Sensor" },
-    // { value: "Cruise Control" },
-    // { value: "Multimedia Display" },
-    // { value: "Android Auto / Apple CarPlay" },
-    // { value: "Bluetooth Connectivity" },
-    // { value: "USB / AUX Input" },
-    // { value: "Keyless Entry" },
-    // { value: "Push Button Start" },
-    // { value: "4x4 Drive System" },
-    // { value: "Start / Stop System" },
-    // { value: "ABS (Anti-lock Braking System)" },
-    // { value: "ESP (Electronic Stability Program)" },
-    // { value: "Airbags" },
-    // { value: "Tire Pressure Warning System" },
-    // { value: "Lane Keeping Assist" },
-    // { value: "Blind Spot Warning System" },
-    // { value: "Child Seat" },
-    // { value: "ISOFIX Mounting System" },
-    // { value: "Hill Start Assist" },
-    // { value: "Emergency Brake Assist" }
-// ];
 
 const tagRender: TagRender = (props) => {
   const { label, closable, onClose } = props;
@@ -67,38 +42,55 @@ type FieldType = {
     carEquipment:[],
 };
 
-export default function AdminAddCar(){
-    // const carDeneme = useDenemeCarQuery("")
+export default function AdminUpdateCar(){
+
+    const [searchParams,setSearchParams] = useSearchParams()
+    const getAdminCar = useAdminGetCarQuery(searchParams.get("id"))
     const [options,setOptions] = useState([])
     const [createCar,resCreateCar] = useCreateCarMutation()
     const getCarEquipmentList = useCarEquipmentListQuery("")
     const [fileList, setFileList] = useState<UploadFile[]>([]);
-
+    const [form] = Form.useForm<FieldType>();
+    
     useEffect(() => {
         if(getCarEquipmentList.isSuccess){
-            console.log("DATA:",getCarEquipmentList.data.data);
             setOptions(getCarEquipmentList.data.data)
         }
     },[getCarEquipmentList.isSuccess])
     
+    useEffect(() => {
+        if(getAdminCar.isSuccess){
+            console.log(getAdminCar.data?.data);
+            console.log(getAdminCar.data?.data.images[0].link);
+            form.setFields([
+                { name: ["title"], value: getAdminCar.data?.data.title ?? "" },
+                { name: ["airConditioner"], value: getAdminCar.data?.data.airConditioner ?? "" },
+                { name: ["distance"], value: getAdminCar.data?.data.distance ?? "" },
+                { name: ["doors"], value: getAdminCar.data?.data.doors ?? "" },
+                { name: ["fuer"], value: getAdminCar.data?.data.fuer ?? "" },
+                { name: ["gearBox"], value: getAdminCar.data?.data.gearBox ?? "" },
+                { name: ["price"], value: getAdminCar.data?.data.price ?? "" },
+                { name: ["seats"], value: getAdminCar.data?.data.seats ?? "" },
+                { name: ["carEquipment"], value: getAdminCar.data?.data.equipment ?? [] },
+            ]);
+            
+        }
+    },[getAdminCar.isSuccess])
+
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         
         const formData = new FormData()
         fileList.map((image) => formData.append("images",image.originFileObj!) )
         formData.append("title",values.title)
         formData.append("airConditioner",String(values.airConditioner))
-        values.carEquipment.map((carEq) => {
-            const data = {id:carEq.key,name:carEq.label}
-            formData.append("carEquipment",JSON.stringify(data))
-        })
+        values.carEquipment.map((carEq) => formData.append("carEquipment",carEq))
         formData.append("distance",values.distance.toString())
         formData.append("doors",values.doors.toString())
         formData.append("fuer",values.fuer)
         formData.append("gearBox",values.gearBox)
         formData.append("price",values.price)
         formData.append("seats",values.seats.toString())
-        console.log(formData.get("carEquipment"));
-        
+
         createCar(formData).unwrap().then((res) => {
             console.log(res);
         }).catch((err) => {
@@ -110,17 +102,14 @@ export default function AdminAddCar(){
         console.log('Failed:', errorInfo);
     };
 
-    // const handleChange = (value: string) => {
-    //     console.log(`selected ${value}`);
-    // };
-
+    
 
 
     return(<div className="max-w-7xl md:mx-auto min-h-[75vh]">
     <Form
       name="basic"
       layout={'vertical'}
-    //   style={{ width:"50vh" }}
+      form={form}
       initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -135,7 +124,11 @@ export default function AdminAddCar(){
                 </Button>
             </div>
             <div className="mx-3">
-                <ImageUpload fileList={fileList} setFileList={setFileList} />
+                {
+                    getAdminCar.data?.data.images.map((image:any) =>  <Image key={image.id} width={200} alt="car image" crossOrigin='anonymous'
+                        src={`${image.link}`}
+                    />)
+                }
             </div>
             <div className="flex flex-col gap-3 mx-3">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -224,12 +217,10 @@ export default function AdminAddCar(){
                     >
                          <Select
                             mode="multiple"
-                            labelInValue
                             tagRender={tagRender}
                             placeholder="Car Equipment"
                             style={{ width: '100%' }}
                             options={options}
-                            fieldNames={{label:"value",value:"id"}}
                         />
                     </Form.Item>
 

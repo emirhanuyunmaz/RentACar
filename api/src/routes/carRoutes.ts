@@ -59,5 +59,10 @@ router.post(
   upload.array('images'),
   controller.onCreateCar.bind(controller)
 );
+router.get(
+  '/adminGetCar',
+  authControl.tokenControl.bind(authControl),
+  controller.adminGetCar.bind(controller)
+);
 
 export default router;

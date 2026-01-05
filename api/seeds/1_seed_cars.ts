@@ -1,11 +1,10 @@
 import type { Knex } from 'knex';
 
 export async function seed(knex: Knex): Promise<void> {
-  await knex('cars').del();
+  // await knex('cars').del();
 
   await knex('cars').insert([
     {
-      id: 'car-1',
       title: 'Renault Clio',
       price: 500000,
       gearBox: 'manuel',
@@ -16,7 +15,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 45000,
     },
     {
-      id: 'car-2',
       title: 'Toyota Corolla',
       price: 650000,
       gearBox: 'otomatik',
@@ -27,7 +25,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 32000,
     },
     {
-      id: 'car-3',
       title: 'Fiat Egea',
       price: 400000,
       gearBox: 'manuel',
@@ -38,7 +35,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 60000,
     },
     {
-      id: 'car-4',
       title: 'Volkswagen Golf',
       price: 750000,
       gearBox: 'otomatik',
@@ -49,7 +45,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 28000,
     },
     {
-      id: 'car-5',
       title: 'Hyundai i20',
       price: 470000,
       gearBox: 'manuel',
@@ -60,7 +55,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 39000,
     },
     {
-      id: 'car-6',
       title: 'Honda Civic',
       price: 800000,
       gearBox: 'otomatik',
@@ -71,7 +65,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 20000,
     },
     {
-      id: 'car-7',
       title: 'BMW 3.20',
       price: 1200000,
       gearBox: 'otomatik',
@@ -82,7 +75,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 15000,
     },
     {
-      id: 'car-8',
       title: 'Mercedes C200',
       price: 1400000,
       gearBox: 'otomatik',
@@ -93,7 +85,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 18000,
     },
     {
-      id: 'car-9',
       title: 'Peugeot 3008',
       price: 1100000,
       gearBox: 'otomatik',
@@ -104,7 +95,6 @@ export async function seed(knex: Knex): Promise<void> {
       distance: 25000,
     },
     {
-      id: 'car-10',
       title: 'Ford Focus',
       price: 550000,
       gearBox: 'manuel',

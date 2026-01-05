@@ -7,7 +7,8 @@ import {  FileOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
 interface DataType {
-  id: React.Key;
+  key:React.Key,
+  id: string;
   name: string;
   surname: string;
   email:string;
@@ -53,7 +54,7 @@ const columns: TableColumnsType<DataType> = [
     title: 'Show Profile',
     fixed: 'right',
     width: 90,
-    render: () => <a><FileOutlined /></a>,
+    render: (row) => <a href={`/admin/updateProfile?id=${row.id}`}><FileOutlined /></a>,
   },
   
 ];
@@ -97,9 +98,10 @@ export default function AdminUserList () {
                         dataSource={getAllUser.data?.data}
                         scroll={{ x: 'max-content' }}
                         pagination={false}
+                        rowKey={`id`}
                     />
                     <div className='flex justify-center mt-3'>
-                      <Pagination defaultCurrent={1} total={getAllUser.data?.count / 5 * 10} onChange={(e) => changePage(e.valueOf())} />
+                      <Pagination defaultCurrent={1} total={(getAllUser.data?.count ?? 0) / 5 * 10} onChange={(e) => changePage(e.valueOf())} />
                     </div>
                 </div>
             </div>

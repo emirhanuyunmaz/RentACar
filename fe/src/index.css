@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+/* @import 'antd/dist/antd.css'; */
 @theme {
   --color-primary: oklch(43.09% 0.187 281.40);
   --color-secondary: oklch(96.12% 0.000 0);

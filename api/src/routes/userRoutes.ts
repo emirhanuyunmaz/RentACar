@@ -54,5 +54,16 @@ router.get(
   authControl.tokenControl.bind(authControl),
   controller.getAllUser.bind(controller)
 );
+router.get(
+  '/adminGetUserProfile',
+  authControl.tokenControl.bind(authControl),
+  controller.adminGetUserProfile.bind(controller)
+);
+
+router.put(
+  '/adminUpdateUser',
+  authControl.tokenControl.bind(authControl),
+  controller.adminUpdateUser.bind(controller)
+);
 
 export default router;

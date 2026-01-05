@@ -7,7 +7,6 @@ import { useGetAllCarListQuery } from '../../store/car/carStore';
 import { FileOutlined, SignatureOutlined } from '@ant-design/icons';
 
 interface DataType {
-  key: React.Key;
   id : string;
   title : string;
   price : number;
@@ -36,7 +35,7 @@ const columns: TableColumnsType<DataType> = [
     title: 'Update',
     fixed: 'right',
     width: 90,
-    render: () => <a><SignatureOutlined /></a>,
+    render: (row) => <a href={`/admin/updateCar?id=${row.id}`}><SignatureOutlined /></a>,
   },
   {
     title: 'Show',
@@ -82,9 +81,10 @@ export default function AdminCarList () {
                         dataSource={getAllCarList.data?.data}
                         scroll={{ x: 'max-content' }}
                         pagination={false}
+                        rowKey={`id`}
                     />
                     <div className='flex justify-center mt-3'>
-                       <Pagination defaultCurrent={1} total={getAllCarList.data?.count / 5 * 10 } onChange={(e) => changePage(e.valueOf())} />
+                       <Pagination defaultCurrent={1} total={(getAllCarList.data?.count ?? 0 )  / 5 * 10 } onChange={(e) => changePage(e.valueOf())} />
                     </div>
                 </div>
             </div>

@@ -15,20 +15,20 @@ export class CarInteractor implements ICarInteractor {
   ) {
     this.repository = repository;
   }
-  
+
   createCar(
     car: Car,
     images: CarImages[],
-    car_equipment: CarEquipment[]
+    car_equipment: String[]
   ): Promise<Boolean> {
     return this.repository.createCar(car, images, car_equipment);
   }
-  
+
   async getEquipmentList(): Promise<CarEquipment[]> {
     return await this.repository.getEquipmentList();
   }
-  getCar(id: string): Promise<Car> {
-    throw new Error('Method not implemented.');
+  async getCar(id: string): Promise<Car | undefined> {
+    return await this.repository.getCar(id);
   }
   deleteCar(id: string): Promise<Boolean> {
     throw new Error('Method not implemented.');

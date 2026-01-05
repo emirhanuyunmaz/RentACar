@@ -24,6 +24,8 @@ import MessageProvider from './ui/components/Message/MessageProvider'
 import ProtectedRoute from './utils/ProtectedRoute'
 import UnauthorizedRoute from './utils/UnauthorizedRoute'
 import AdminProtectedRoute from './utils/AdminProtectedRoute'
+import AdminUpdateUser from './ui/Admin/AdminUpdateUser'
+import AdminUpdateCar from './ui/Admin/AdminUpdateCar'
 
 export default function App() {
   
@@ -48,6 +50,8 @@ export default function App() {
       <Route path="/admin/dashboard" element={<AdminDashboard/>} />
       <Route path="/admin/carList" element={<AdminCarList/>} />
       <Route path="/admin/userList" element={<AdminUserList/>} />
+      <Route path="/admin/updateProfile" element={<AdminUpdateUser/>} />
+      <Route path="/admin/updateCar" element={<AdminUpdateCar/>} />
       <Route path="/admin/addUser" element={<AdminAddUser/>} />
       <Route path="/admin/addCar" element={<AdminAddCar/>} />
     </Routes>

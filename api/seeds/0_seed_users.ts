@@ -1,9 +1,7 @@
 import type { Knex } from 'knex';
 
-// const { v4: uuidv4 } = require('uuid');
-
 exports.seed = async function (knex: Knex) {
-  await knex('users').del();
+  // await knex('users').del();
 
   await knex('users').insert([
     {

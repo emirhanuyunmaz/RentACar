@@ -1,66 +1,57 @@
 import type { Knex } from 'knex';
 
 export async function seed(knex: Knex): Promise<void> {
-  await knex('car_images').del();
+  // Tabloyu temizle ve ID sayacını sıfırla
+  // await knex('car_images').truncate();
 
   await knex('car_images').insert([
     {
-      id: 'img-1',
-      car_id: 'car-1',
+      car_id: 1, // 'car-1' yerine 1
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-2',
-      car_id: 'car-2',
+      car_id: 2, // 'car-2' yerine 2
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-3',
-      car_id: 'car-3',
+      car_id: 3,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-4',
-      car_id: 'car-4',
+      car_id: 4,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-5',
-      car_id: 'car-5',
+      car_id: 5,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-6',
-      car_id: 'car-6',
+      car_id: 6,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-7',
-      car_id: 'car-7',
+      car_id: 7,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-8',
-      car_id: 'car-8',
+      car_id: 8,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-9',
-      car_id: 'car-9',
+      car_id: 9,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      id: 'img-10',
-      car_id: 'car-10',
+      car_id: 10,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },

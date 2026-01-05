@@ -11,7 +11,7 @@ import compression from 'compression';
 const app: Application = express();
 const PORT = config.PORT || 3002;
 
-app.use(helmet()); // Güvenlik için gerekli
+app.use(helmet({crossOriginResourcePolicy: false})); // Güvenlik için gerekli
 app.use(compression()); // Daha hızlı olması için veri küçültme(zip) işlemi
 app.use(cors());
 app.use('/uploads', express.static('uploads')); // Uploads kasörünün dışarıya açılması işlemi.

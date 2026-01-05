@@ -1,18 +1,21 @@
 import type { Knex } from 'knex';
 
 export async function seed(knex: Knex): Promise<void> {
-  await knex('car_equipment').del();
+  // Tabloyu temizle ve ID sayacını sıfırla
+  // await knex('car_equipment').truncate();
 
   await knex('car_equipment').insert([
-    { id: 'ce-1', car_id: 'car-1', equipment_id: 'eq-1' },
-    { id: 'ce-2', car_id: 'car-1', equipment_id: 'eq-2' },
-    { id: 'ce-3', car_id: 'car-2', equipment_id: 'eq-3' },
-    { id: 'ce-4', car_id: 'car-2', equipment_id: 'eq-4' },
-    { id: 'ce-5', car_id: 'car-3', equipment_id: 'eq-5' },
-    { id: 'ce-6', car_id: 'car-4', equipment_id: 'eq-6' },
-    { id: 'ce-7', car_id: 'car-5', equipment_id: 'eq-7' },
-    { id: 'ce-8', car_id: 'car-6', equipment_id: 'eq-8' },
-    { id: 'ce-9', car_id: 'car-7', equipment_id: 'eq-9' },
-    { id: 'ce-10', car_id: 'car-8', equipment_id: 'eq-10' },
+    // id alanını yazmıyoruz, otomatik artacak.
+    // car_id ve equipment_id artık tam sayı.
+    { car_id: 1, equipment_id: 1 }, // car-1 -> eq-1
+    { car_id: 1, equipment_id: 2 }, // car-1 -> eq-2
+    { car_id: 2, equipment_id: 3 }, // car-2 -> eq-3
+    { car_id: 2, equipment_id: 4 }, // car-2 -> eq-4
+    { car_id: 3, equipment_id: 5 }, // car-3 -> eq-5
+    { car_id: 4, equipment_id: 6 }, // car-4 -> eq-6
+    { car_id: 5, equipment_id: 7 }, // car-5 -> eq-7
+    { car_id: 6, equipment_id: 8 }, // car-6 -> eq-8
+    { car_id: 7, equipment_id: 9 }, // car-7 -> eq-9
+    { car_id: 8, equipment_id: 10 },// car-8 -> eq-10
   ]);
 }

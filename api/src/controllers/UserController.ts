@@ -99,4 +99,43 @@ export class UserController {
       next(err);
     }
   }
+
+  async adminGetUserProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const id = req.query.id;
+      if (id) {
+        const data = await this.interactor.findUser(id as string);
+        res.status(200).json({ message: 'Success', data });
+      } else {
+        res.status(404).json({ message: 'User Not Found ' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async adminUpdateUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { id } = req.body;
+      console.log('IDIDI:', id);
+
+      const data = req.body;
+      if (id) {
+        await this.interactor.updateUser({ id: id as string, data: data });
+        return res.status(201).json({ message: 'Success' });
+      } else {
+        return res.status(404).json({ message: 'User Error' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
 }

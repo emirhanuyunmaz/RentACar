@@ -3,8 +3,8 @@ import { Link } from "react-router";
 
 
 export default function LeftBar(){
-    return(<div className="min-h-[80vh] bg-primary flex p-3">
-
+    return(<div className="min-h-[80vh] bg-primary flex flex-col gap-5 p-3">
+        <h1 className="text-center text-2xl font-bold text-white">Admin Panel</h1>
         <ul className="h-full flex flex-col gap-5 px-8 text-white">
             <li className={`flex gap-3 hover:opacity-40 transition-all`} >
                 <HomeFilled/>
