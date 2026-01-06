@@ -97,7 +97,6 @@ export default function AdminAddCar(){
         formData.append("gearBox",values.gearBox)
         formData.append("price",values.price)
         formData.append("seats",values.seats.toString())
-        console.log(formData.get("carEquipment"));
         
         createCar(formData).unwrap().then((res) => {
             console.log(res);

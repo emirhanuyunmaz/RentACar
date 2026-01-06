@@ -13,7 +13,6 @@ export class CarRepository implements ICarRepository {
     car_equipment: String[]
   ): Promise<Boolean> {
     try {
-
       await db.transaction(async (trx) => {
         const carId = await trx('cars').insert({
           title: car.title,
@@ -36,14 +35,12 @@ export class CarRepository implements ICarRepository {
           await trx('car_images').insert(imageData);
         }
         if (car_equipment && car_equipment.length > 0) {
-          
-          
           const car_equipmentData = car_equipment.map((equipment) => {
-            const data = JSON.parse(equipment as string)
+            const data = JSON.parse(equipment as string);
             return {
               car_id: insertedCarId,
               equipment_id: data.id,
-            }
+            };
           });
           await trx('car_equipment').insert(car_equipmentData);
         }
@@ -96,8 +93,27 @@ export class CarRepository implements ICarRepository {
   deleteCar(id: string): Promise<Boolean> {
     throw new Error('Method not implemented.');
   }
-  updateCar(car: Car): Promise<Car> {
-    throw new Error('Method not implemented.');
+  async updateCar(id: number, car: Car): Promise<Car> {
+    await db('cars').where({ id: id }).update({
+      title: car.title,
+      price: car.price,
+      gearBox: car.gearBox,
+      airConditioner: car.airConditioner,
+      fuer: car.fuer,
+      doors: car.doors,
+      seats: car.seats,
+      distance: car.distance,
+      updated_at: db.fn.now(),
+    });
+
+    await db('car_equipment').where({ car_id: id }).del();
+
+    const equipment_ToInsert = car.carEquipment.map((carEq: any) => ({
+      car_id: id,
+      equipment_id: carEq.id,
+    }));
+    await db('car_equipment').insert(equipment_ToInsert);
+    return car;
   }
   async listCar(): Promise<Car[] | [] | any> {
     // IMAGES alt sorgu

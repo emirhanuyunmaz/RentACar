@@ -64,5 +64,9 @@ router.get(
   authControl.tokenControl.bind(authControl),
   controller.adminGetCar.bind(controller)
 );
-
+router.post(
+  '/adminUpdateCar',
+  authControl.tokenControl.bind(authControl),
+  controller.adminUpdateCar.bind(controller)
+);
 export default router;

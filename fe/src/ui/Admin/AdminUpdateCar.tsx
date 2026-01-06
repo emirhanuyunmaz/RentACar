@@ -3,9 +3,8 @@ import { Button, Form, Image, Input, InputNumber, Select, Tag } from "antd";
 import ImageUpload from "./components/ImageUpload";
 import { SaveOutlined } from "@ant-design/icons";
 import {  useEffect, useState } from 'react';
-import { useAdminGetCarQuery, useCarEquipmentListQuery, useCreateCarMutation } from '../../store/car/carStore';
+import { useAdminGetCarQuery, useAdminUpdateCarMutation, useCarEquipmentListQuery, useCreateCarMutation } from '../../store/car/carStore';
 import { useSearchParams } from 'react-router';
-// import { useDenemeCarQuery } from '../../store/car/carStore';
 
 type TagRender = SelectProps['tagRender'];
 
@@ -31,7 +30,6 @@ const tagRender: TagRender = (props) => {
 type FieldType = {
     id:string | undefined,
     title:string,
-    // images:[{name:string,link:string}],
     price:string,
     gearBox:string,
     airConditioner:boolean,
@@ -47,7 +45,7 @@ export default function AdminUpdateCar(){
     const [searchParams,setSearchParams] = useSearchParams()
     const getAdminCar = useAdminGetCarQuery(searchParams.get("id"))
     const [options,setOptions] = useState([])
-    const [createCar,resCreateCar] = useCreateCarMutation()
+    const [updateCar,resUpdateCar] = useAdminUpdateCarMutation() 
     const getCarEquipmentList = useCarEquipmentListQuery("")
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [form] = Form.useForm<FieldType>();
@@ -60,8 +58,8 @@ export default function AdminUpdateCar(){
     
     useEffect(() => {
         if(getAdminCar.isSuccess){
-            console.log(getAdminCar.data?.data);
-            console.log(getAdminCar.data?.data.images[0].link);
+            console.log("DATA:",getAdminCar.data?.data.equipment);
+            
             form.setFields([
                 { name: ["title"], value: getAdminCar.data?.data.title ?? "" },
                 { name: ["airConditioner"], value: getAdminCar.data?.data.airConditioner ?? "" },
@@ -79,19 +77,28 @@ export default function AdminUpdateCar(){
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         
-        const formData = new FormData()
-        fileList.map((image) => formData.append("images",image.originFileObj!) )
-        formData.append("title",values.title)
-        formData.append("airConditioner",String(values.airConditioner))
-        values.carEquipment.map((carEq) => formData.append("carEquipment",carEq))
-        formData.append("distance",values.distance.toString())
-        formData.append("doors",values.doors.toString())
-        formData.append("fuer",values.fuer)
-        formData.append("gearBox",values.gearBox)
-        formData.append("price",values.price)
-        formData.append("seats",values.seats.toString())
+        const carEquipment:any = []
+        values.carEquipment.map((carEq) => {
+            const data = {id:carEq.key,name:carEq.label}
+            console.log("DATA:",carEq);
+            
+            carEquipment.push(data)
+        })        
+        
+        const body = {
+            id:searchParams.get("id"),
+            title : values.title,
+            airConditioner : values.airConditioner,
+            carEquipment : carEquipment,
+            distance : values.distance,
+            doors : values.doors,
+            fuer:values.fuer,
+            gearBox : values.gearBox,
+            price : values.price,
+            seats : values.seats,
+        }
 
-        createCar(formData).unwrap().then((res) => {
+        updateCar(body).unwrap().then((res) => {
             console.log(res);
         }).catch((err) => {
             console.log("ERR:",err);
@@ -103,8 +110,6 @@ export default function AdminUpdateCar(){
     };
 
     
-
-
     return(<div className="max-w-7xl md:mx-auto min-h-[75vh]">
     <Form
       name="basic"
@@ -120,14 +125,16 @@ export default function AdminUpdateCar(){
 
                 <Button htmlType='submit' variant="dashed"  >
                 <span><SaveOutlined/></span>
-                    Save
+                    Update
                 </Button>
             </div>
-            <div className="mx-3">
+            <div className="mx-3 flex">
                 {
-                    getAdminCar.data?.data.images.map((image:any) =>  <Image key={image.id} width={200} alt="car image" crossOrigin='anonymous'
-                        src={`${image.link}`}
-                    />)
+                    getAdminCar.data?.data.images.map((image:any) =>  <div className='flex flex-col items-center gap-3'>
+                        <Image key={image.id} width={200} alt="car image" crossOrigin='anonymous'
+                        src={`${image.link}`} />
+                        <Button type='dashed' className='!text-red-600' >Delete</Button>
+                    </div>)
                 }
             </div>
             <div className="flex flex-col gap-3 mx-3">
@@ -217,14 +224,14 @@ export default function AdminUpdateCar(){
                     >
                          <Select
                             mode="multiple"
+                            labelInValue
                             tagRender={tagRender}
                             placeholder="Car Equipment"
                             style={{ width: '100%' }}
                             options={options}
+                            fieldNames={{label:"value",value:"id"}}
                         />
                     </Form.Item>
-
-                    
                 </div>
                 
             </div>

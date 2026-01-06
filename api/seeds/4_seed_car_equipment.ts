@@ -16,6 +16,6 @@ export async function seed(knex: Knex): Promise<void> {
     { car_id: 5, equipment_id: 7 }, // car-5 -> eq-7
     { car_id: 6, equipment_id: 8 }, // car-6 -> eq-8
     { car_id: 7, equipment_id: 9 }, // car-7 -> eq-9
-    { car_id: 8, equipment_id: 10 },// car-8 -> eq-10
+    { car_id: 8, equipment_id: 10 }, // car-8 -> eq-10
   ]);
 }

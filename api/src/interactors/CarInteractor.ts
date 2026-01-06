@@ -33,8 +33,8 @@ export class CarInteractor implements ICarInteractor {
   deleteCar(id: string): Promise<Boolean> {
     throw new Error('Method not implemented.');
   }
-  updateCar(car: Car): Promise<Car> {
-    throw new Error('Method not implemented.');
+  async updateCar(id:number , car: Car): Promise<Car> {
+    return await this.repository.updateCar(id,car)
   }
   async listCar(): Promise<Car[] | []> {
     const cc = await this.repository.listCar();

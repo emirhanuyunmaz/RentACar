@@ -49,7 +49,6 @@ export class CarController {
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log('BODY::', req.body.carEquipment[0].id);
       const imageNameList = await this.imagesProcess.uploadMultiImage(
         req.files! as Express.Multer.File[]
       );
@@ -101,14 +100,56 @@ export class CarController {
   ): Promise<any> {
     try {
       const id = req.query.id;
-      if(id){
+      if (id) {
         const data = await this.interactor.getCar(id as string);
-        return res.status(200).json({data})
-      }else{
-        return res.status(404).json({message : "Car not found !"})
+        return res.status(200).json({ data });
+      } else {
+        return res.status(404).json({ message: 'Car not found !' });
       }
     } catch (err) {
       next(err);
     }
   }
+
+  async adminUpdateCar(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const {id} = req.body
+      await this.interactor.updateCar(id,req.body)
+      return res.status(201).json({ message: 'Car Update Success' });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async adminUpdateCarImage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const body = req.body;
+      console.log(body);
+      return res.status(201).json({ message: 'Car IMAGE Update Success' });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async adminDeleteCarImage(
+    req:Request,
+    res:Response,
+    next:NextFunction
+  ):Promise<any>{
+    try{
+      
+      res.status(201).json({message:"Image Delete Success"})
+    }catch(err){
+      next(err)
+    }
+  }
+
 }

@@ -4,7 +4,7 @@ export async function up(knex: Knex): Promise<void> {
   // users
   await knex.schema
     .createTable('users', (table) => {
-      table.increments('id').primary(); 
+      table.increments('id').primary();
       table.string('name', 100).notNullable();
       table.string('surname', 150).notNullable();
       table.string('email', 150).notNullable().unique();
@@ -18,7 +18,7 @@ export async function up(knex: Knex): Promise<void> {
   // cars
   await knex.schema
     .createTable('cars', (table) => {
-      table.increments('id').primary(); 
+      table.increments('id').primary();
       table.string('title', 150).notNullable();
       table.double('price').notNullable();
       table.string('gearBox').notNullable();
@@ -34,9 +34,14 @@ export async function up(knex: Knex): Promise<void> {
   // car-images
   await knex.schema
     .createTable('car_images', (table) => {
-      table.increments('id').primary(); 
+      table.increments('id').primary();
       // İlişkili car_id artık integer olmalı
-      table.integer('car_id').unsigned().references('id').inTable('cars').onDelete('CASCADE');
+      table
+        .integer('car_id')
+        .unsigned()
+        .references('id')
+        .inTable('cars')
+        .onDelete('CASCADE');
       table.string('name').notNullable();
       table.string('link').notNullable();
     })
@@ -45,7 +50,7 @@ export async function up(knex: Knex): Promise<void> {
   // equipment
   await knex.schema
     .createTable('equipment', (table) => {
-      table.increments('id').primary(); 
+      table.increments('id').primary();
       table.string('value').notNullable();
     })
     .then(() => console.log('Equipment Table created'));
@@ -53,10 +58,20 @@ export async function up(knex: Knex): Promise<void> {
   // car-equipment (junction)
   await knex.schema
     .createTable('car_equipment', (table) => {
-      table.increments('id').primary(); 
+      table.increments('id').primary();
       // Foreign key'ler integer olmalı
-      table.integer('car_id').unsigned().references('id').inTable('cars').onDelete('CASCADE');
-      table.integer('equipment_id').unsigned().references('id').inTable('equipment').onDelete('CASCADE');
+      table
+        .integer('car_id')
+        .unsigned()
+        .references('id')
+        .inTable('cars')
+        .onDelete('CASCADE');
+      table
+        .integer('equipment_id')
+        .unsigned()
+        .references('id')
+        .inTable('equipment')
+        .onDelete('CASCADE');
     })
     .then(() => console.log('Car Equipment Table created'));
 }

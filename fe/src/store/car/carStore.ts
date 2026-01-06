@@ -35,8 +35,16 @@ export const carApi = createApi({
 
         adminGetCar : builder.query<any,any>({
             query: (id) => `/adminGetCar?id=${id}` 
+        }),
+
+        adminUpdateCar : builder.mutation<any,any>({
+            query:(body) => ({
+                url:`/adminUpdateCar`,
+                method:"POST",
+                body:body
+            })
         })
 
     })
 })
-export const {useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useAdminGetCarQuery} = carApi
+export const {useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useAdminGetCarQuery , useAdminUpdateCarMutation} = carApi

@@ -10,7 +10,7 @@ export interface ICarInteractor {
   ): Promise<Boolean>;
   getCar(id: string): Promise<Car | undefined>;
   deleteCar(id: string): Promise<Boolean>;
-  updateCar(car: Car): Promise<Car>;
+  updateCar(id:number,car: Car): Promise<Car>;
   listCar(): Promise<Car[] | []>;
   getEquipmentList(): Promise<CarEquipment[]>;
   getAllCars(page: number): Promise<Car[]>;
