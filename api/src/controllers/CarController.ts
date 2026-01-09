@@ -4,6 +4,7 @@ import { ICarInteractor } from '../interfaces/ICarInteractor';
 import { INTERFACE_TYPE } from '../utils/appConsts';
 import { IImagesProcess } from '../interfaces/IImagesProcess';
 import { imageFormated } from '../utils/ImageMiddleware';
+import { CarEquipment } from '../entities/CarEquipment';
 
 @injectable()
 export class CarController {
@@ -118,22 +119,14 @@ export class CarController {
   ): Promise<any> {
     try {
       const {id} = req.body
-      await this.interactor.updateCar(id,req.body)
+      const carEquipment:CarEquipment[] = req.body.carEquipment.map((carEq : string) => JSON.parse(carEq))
+      
+      const imageNameList = await this.imagesProcess.uploadMultiImage(
+        req.files! as Express.Multer.File[]
+      );
+      
+      await this.interactor.updateCar(id , req.body ,carEquipment , imageFormated(imageNameList))
       return res.status(201).json({ message: 'Car Update Success' });
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async adminUpdateCarImage(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<any> {
-    try {
-      const body = req.body;
-      console.log(body);
-      return res.status(201).json({ message: 'Car IMAGE Update Success' });
     } catch (err) {
       next(err);
     }

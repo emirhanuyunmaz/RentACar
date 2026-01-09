@@ -67,6 +67,7 @@ router.get(
 router.post(
   '/adminUpdateCar',
   authControl.tokenControl.bind(authControl),
+  upload.array('images'),
   controller.adminUpdateCar.bind(controller)
 );
 export default router;

@@ -13,7 +13,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => {console.log("ERR:",error);  reject(error)};
   });
 
-export default function ImageUpload({fileList, setFileList}:{fileList:UploadFile[], setFileList:any}) {
+export default function ImageUpload({fileList, setFileList,oldFileSize = 0}:{fileList:UploadFile[], setFileList:any,oldFileSize:number}) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   // const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -46,7 +46,7 @@ export default function ImageUpload({fileList, setFileList}:{fileList:UploadFile
         onPreview={handlePreview}
         onChange={handleChange}
       >
-        {fileList.length >= 5 ? null : uploadButton}
+        {fileList.length >= 5 - oldFileSize ? null : uploadButton}
       </Upload>
       {previewImage && (
         <Image

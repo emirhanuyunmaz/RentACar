@@ -77,28 +77,23 @@ export default function AdminUpdateCar(){
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         
-        const carEquipment:any = []
+        const formData = new FormData()
+        formData.append("id",searchParams.get("id") as string)
+        fileList.map((image) => formData.append("images",image.originFileObj!) )
+        formData.append("title",values.title)
+        formData.append("airConditioner",String(values.airConditioner))
         values.carEquipment.map((carEq) => {
             const data = {id:carEq.key,name:carEq.label}
-            console.log("DATA:",carEq);
-            
-            carEquipment.push(data)
-        })        
+            formData.append("carEquipment[]",JSON.stringify(data))
+        })
+        formData.append("distance",values.distance.toString())
+        formData.append("doors",values.doors.toString())
+        formData.append("fuer",values.fuer)
+        formData.append("gearBox",values.gearBox)
+        formData.append("price",values.price)
+        formData.append("seats",values.seats.toString())
         
-        const body = {
-            id:searchParams.get("id"),
-            title : values.title,
-            airConditioner : values.airConditioner,
-            carEquipment : carEquipment,
-            distance : values.distance,
-            doors : values.doors,
-            fuer:values.fuer,
-            gearBox : values.gearBox,
-            price : values.price,
-            seats : values.seats,
-        }
-
-        updateCar(body).unwrap().then((res) => {
+        updateCar(formData).unwrap().then((res) => {
             console.log(res);
         }).catch((err) => {
             console.log("ERR:",err);
@@ -128,10 +123,12 @@ export default function AdminUpdateCar(){
                     Update
                 </Button>
             </div>
-            <div className="mx-3 flex">
+            <div className="mx-3 flex gap-3">
+                { <ImageUpload fileList={fileList} setFileList={setFileList} oldFileSize={getAdminCar.data?.data.images.length}  />}
+                
                 {
                     getAdminCar.data?.data.images.map((image:any) =>  <div className='flex flex-col items-center gap-3'>
-                        <Image key={image.id} width={200} alt="car image" crossOrigin='anonymous'
+                        <Image key={image.id} width={96} alt="car image" crossOrigin='anonymous'
                         src={`${image.link}`} />
                         <Button type='dashed' className='!text-red-600' >Delete</Button>
                     </div>)

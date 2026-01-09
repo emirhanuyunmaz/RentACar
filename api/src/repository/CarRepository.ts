@@ -93,7 +93,7 @@ export class CarRepository implements ICarRepository {
   deleteCar(id: string): Promise<Boolean> {
     throw new Error('Method not implemented.');
   }
-  async updateCar(id: number, car: Car): Promise<Car> {
+  async updateCar(id: number, car: Car,carEquipment:CarEquipment[],images:CarImages[],): Promise<Car> {
     await db('cars').where({ id: id }).update({
       title: car.title,
       price: car.price,
@@ -105,14 +105,25 @@ export class CarRepository implements ICarRepository {
       distance: car.distance,
       updated_at: db.fn.now(),
     });
+    
+    if(carEquipment.length > 0){
+      await db('car_equipment').where({ car_id: id }).del();      
+      const equipment_ToInsert = carEquipment.map((carEq: CarEquipment) => ({
+        car_id: id,
+        equipment_id: carEq.id,
+      }));
+      await db('car_equipment').insert(equipment_ToInsert);
+    }
 
-    await db('car_equipment').where({ car_id: id }).del();
-
-    const equipment_ToInsert = car.carEquipment.map((carEq: any) => ({
-      car_id: id,
-      equipment_id: carEq.id,
-    }));
-    await db('car_equipment').insert(equipment_ToInsert);
+    if(images.length > 0){
+      const imageData = images.map((img) => ({
+          car_id: id,
+          link: img.link,
+          name: img.name,
+        }));
+      await db('car_images').insert(imageData);
+    }
+    
     return car;
   }
   async listCar(): Promise<Car[] | [] | any> {
