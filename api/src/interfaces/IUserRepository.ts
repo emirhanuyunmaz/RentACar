@@ -10,7 +10,7 @@ export interface IUserRepository {
     email: string;
     password: string;
   }): Promise<User>;
-  deleteUser(id: string): Promise<User>;
+  deleteUser(id: number): Promise<User>;
   updateUser({ id, data }: { id: String; data: User }): Promise<User>;
   getAllUser(page: number): Promise<User[]>;
   userCount(): Promise<Number>;

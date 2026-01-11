@@ -65,8 +65,13 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async deleteUser(id: string): Promise<User> {
+  async deleteUser(id: number): Promise<User> {
     const user = await db('users').where('id', id).first();
+    if (user) {
+      await db('users').where('id', id).first().del();
+    } else {
+      throw Error('User Not Found');
+    }
     return user;
   }
   async userCount(): Promise<Number> {

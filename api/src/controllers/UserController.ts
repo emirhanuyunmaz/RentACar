@@ -125,14 +125,31 @@ export class UserController {
   ): Promise<any> {
     try {
       const { id } = req.body;
-      console.log('IDIDI:', id);
-
       const data = req.body;
       if (id) {
         await this.interactor.updateUser({ id: id as string, data: data });
         return res.status(201).json({ message: 'Success' });
       } else {
         return res.status(404).json({ message: 'User Error' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async adminDeleteUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { id } = req.body;
+      console.log('USER DELETE ID:', id);
+      if (id) {
+        await this.interactor.deleteUser(id);
+        return res.status(201).json({ message: 'User Delete Success' });
+      } else {
+        return res.status(404).json({ message: 'User not found' });
       }
     } catch (err) {
       next(err);

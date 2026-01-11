@@ -118,14 +118,21 @@ export class CarController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const {id} = req.body
-      const carEquipment:CarEquipment[] = req.body.carEquipment.map((carEq : string) => JSON.parse(carEq))
-      
+      const { id } = req.body;
+      const carEquipment: CarEquipment[] = req.body.carEquipment.map(
+        (carEq: string) => JSON.parse(carEq)
+      );
+
       const imageNameList = await this.imagesProcess.uploadMultiImage(
         req.files! as Express.Multer.File[]
       );
-      
-      await this.interactor.updateCar(id , req.body ,carEquipment , imageFormated(imageNameList))
+
+      await this.interactor.updateCar(
+        id,
+        req.body,
+        carEquipment,
+        imageFormated(imageNameList)
+      );
       return res.status(201).json({ message: 'Car Update Success' });
     } catch (err) {
       next(err);
@@ -133,22 +140,19 @@ export class CarController {
   }
 
   async adminDeleteCarImage(
-    req:Request,
-    res:Response,
-    next:NextFunction
-  ):Promise<any>{
-    try{
-
-      const {imageName}= req.body
-      console.log("CAR IMAGE NAME :",imageName);
-      const imageIsDelete = await this.interactor.deleteCarImage(imageName)
-      if(imageIsDelete){
-        this.imagesProcess.deleteSingleImage(imageName + ".png")
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { imageName } = req.body;
+      const imageIsDelete = await this.interactor.deleteCarImage(imageName);
+      if (imageIsDelete) {
+        this.imagesProcess.deleteSingleImage(imageName + '.png');
       }
-      res.status(201).json({message:"Image Delete Success"})
-    }catch(err){
-      next(err)
+      res.status(201).json({ message: 'Image Delete Success' });
+    } catch (err) {
+      next(err);
     }
   }
-
 }

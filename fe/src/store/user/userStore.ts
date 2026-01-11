@@ -58,9 +58,16 @@ export const userApi = createApi({
       })
     }),
 
+    adminDeleteUser:builder.mutation<any,any>({
+      query:(body) => ({
+        url:`/adminUserDelete`,
+        method:"DELETE",
+        body:body
+      })
+    })
 
 
   }),
 })
 
-export const { useDenemeQuery , useCreateUserMutation , useLoginUserMutation , useGetProfileQuery , useUpdateUserMutation , useGetAllUserQuery , useAdminGetUserQuery , useAdminUpdateUserMutation} = userApi
+export const { useDenemeQuery , useCreateUserMutation , useLoginUserMutation , useGetProfileQuery , useUpdateUserMutation , useGetAllUserQuery , useAdminGetUserQuery , useAdminUpdateUserMutation , useAdminDeleteUserMutation} = userApi

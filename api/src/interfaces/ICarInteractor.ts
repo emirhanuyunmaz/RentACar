@@ -10,10 +10,15 @@ export interface ICarInteractor {
   ): Promise<Boolean>;
   getCar(id: string): Promise<Car | undefined>;
   deleteCar(id: string): Promise<Boolean>;
-  updateCar(id:number,car: Car,carEquipment:CarEquipment[],images:CarImages[]): Promise<Car>;
+  updateCar(
+    id: number,
+    car: Car,
+    carEquipment: CarEquipment[],
+    images: CarImages[]
+  ): Promise<Car>;
   listCar(): Promise<Car[] | []>;
   getEquipmentList(): Promise<CarEquipment[]>;
   getAllCars(page: number): Promise<Car[]>;
   carCount(): Promise<Number>;
-  deleteCarImage(imageName:String):Promise<Boolean>;
+  deleteCarImage(imageName: String): Promise<Boolean>;
 }

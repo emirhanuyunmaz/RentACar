@@ -1,7 +1,7 @@
-import { Button, Form, Input, Select, type FormProps } from "antd";
+import { Button, Form, Input, Modal, Select, type FormProps } from "antd";
 import {  useNavigate, useSearchParams } from "react-router";
-import { useAdminGetUserQuery, useAdminUpdateUserMutation } from "../../store/user/userStore";
-import { useEffect } from "react";
+import { useAdminDeleteUserMutation, useAdminGetUserQuery, useAdminUpdateUserMutation } from "../../store/user/userStore";
+import { useEffect, useState } from "react";
 import { useMessageApi } from "../components/Message/MessageProvider";
 
 type FieldType = {
@@ -19,7 +19,9 @@ export default function AdminUpdateUser(){
     const [searchParams,setSearchParams] = useSearchParams()
     const adminGetUser = useAdminGetUserQuery(searchParams.get("id"))
     const [adminUpdateUser,resAdminUpdateUser] = useAdminUpdateUserMutation()
+    const [adminDeleteUser , resAdminDeleteUser] = useAdminDeleteUserMutation()
     const [form] = Form.useForm<FieldType>();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
@@ -44,6 +46,25 @@ export default function AdminUpdateUser(){
         console.log(`selected ${value}`);
     };
 
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+        adminDeleteUser({id:searchParams.get("id")}).unwrap()
+        .then((res) => {
+            console.log("RES:",res);
+            navigate(-1)
+        }).catch((err) => {
+            console.log("ERR:",err);
+        })
+
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
     useEffect(() => {
         if(adminGetUser.isSuccess){
@@ -135,7 +156,7 @@ export default function AdminUpdateUser(){
                 </Button>
                 </Form.Item>
                 <Form.Item label={null}>
-                <Button type="primary" style={{backgroundColor : "red" }} className="hover:opacity-75">
+                <Button onClick={showModal} type="primary" style={{backgroundColor : "red" }} className="hover:opacity-75">
                     <span >Delete</span>
                 </Button>
                 </Form.Item>
@@ -147,5 +168,15 @@ export default function AdminUpdateUser(){
                 </Form.Item>
             </div>
         </Form>
+        <Modal
+            title="DELETE USER"
+            closable={{ 'aria-label': 'Custom Close Button' }}
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            
+            >
+            <p>Are you sure you want to delete the user?</p>
+        </Modal>
     </div>)
 }

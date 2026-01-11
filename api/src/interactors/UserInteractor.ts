@@ -49,8 +49,8 @@ export class UserInteractor implements IUserInteractor {
     return await this.repository.updateUser({ id, data });
   }
 
-  deleteUser(): Promise<User> {
-    throw new Error('Method not implemented.');
+  async deleteUser(id: number): Promise<User> {
+    return await this.repository.deleteUser(id);
   }
 
   async getAllUser(page: number): Promise<User[]> {

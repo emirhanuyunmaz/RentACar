@@ -66,4 +66,10 @@ router.put(
   controller.adminUpdateUser.bind(controller)
 );
 
+router.delete(
+  '/adminUserDelete',
+  authControl.tokenControl.bind(authControl),
+  controller.adminDeleteUser.bind(controller)
+);
+
 export default router;
