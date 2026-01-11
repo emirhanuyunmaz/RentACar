@@ -43,8 +43,17 @@ export const carApi = createApi({
                 method:"POST",
                 body:body
             })
+        }),
+
+        adminDeleteImage:builder.mutation<any,any>({
+            query:(body) =>({
+                url:"/adminDeleteCarImage",
+                method:"DELETE",
+                body:body
+            })
         })
+
 
     })
 })
-export const {useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useAdminGetCarQuery , useAdminUpdateCarMutation} = carApi
+export const { useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useAdminGetCarQuery , useAdminUpdateCarMutation , useAdminDeleteImageMutation } = carApi

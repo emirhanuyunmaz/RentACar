@@ -70,4 +70,9 @@ router.post(
   upload.array('images'),
   controller.adminUpdateCar.bind(controller)
 );
+router.delete(
+  '/adminDeleteCarImage',
+  authControl.tokenControl.bind(authControl),
+  controller.adminDeleteCarImage.bind(controller)
+);
 export default router;

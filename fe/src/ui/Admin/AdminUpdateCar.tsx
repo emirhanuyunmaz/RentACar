@@ -3,7 +3,7 @@ import { Button, Form, Image, Input, InputNumber, Select, Tag } from "antd";
 import ImageUpload from "./components/ImageUpload";
 import { SaveOutlined } from "@ant-design/icons";
 import {  useEffect, useState } from 'react';
-import { useAdminGetCarQuery, useAdminUpdateCarMutation, useCarEquipmentListQuery, useCreateCarMutation } from '../../store/car/carStore';
+import { useAdminDeleteImageMutation, useAdminGetCarQuery, useAdminUpdateCarMutation, useCarEquipmentListQuery } from '../../store/car/carStore';
 import { useSearchParams } from 'react-router';
 
 type TagRender = SelectProps['tagRender'];
@@ -47,6 +47,7 @@ export default function AdminUpdateCar(){
     const [options,setOptions] = useState([])
     const [updateCar,resUpdateCar] = useAdminUpdateCarMutation() 
     const getCarEquipmentList = useCarEquipmentListQuery("")
+    const [adminDeleteCarImage,resDeleteImage] = useAdminDeleteImageMutation()
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [form] = Form.useForm<FieldType>();
     
@@ -104,7 +105,17 @@ export default function AdminUpdateCar(){
         console.log('Failed:', errorInfo);
     };
 
-    
+    const deleteImage = async (imageName:String) => {
+        console.log("DELETE IMAGE:",imageName);
+        adminDeleteCarImage({imageName:imageName}).unwrap()
+        .then((res) => {
+            console.log("RES:",res);
+        }).catch((err) => {
+            console.log("ERR:",err);
+        })
+        getAdminCar.refetch()
+    }
+
     return(<div className="max-w-7xl md:mx-auto min-h-[75vh]">
     <Form
       name="basic"
@@ -130,7 +141,7 @@ export default function AdminUpdateCar(){
                     getAdminCar.data?.data.images.map((image:any) =>  <div className='flex flex-col items-center gap-3'>
                         <Image key={image.id} width={96} alt="car image" crossOrigin='anonymous'
                         src={`${image.link}`} />
-                        <Button type='dashed' className='!text-red-600' >Delete</Button>
+                        <Button onClick={() => deleteImage(image.name)} type='dashed' className='!text-red-600' >Delete</Button>
                     </div>)
                 }
             </div>

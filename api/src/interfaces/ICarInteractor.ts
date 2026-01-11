@@ -15,4 +15,5 @@ export interface ICarInteractor {
   getEquipmentList(): Promise<CarEquipment[]>;
   getAllCars(page: number): Promise<Car[]>;
   carCount(): Promise<Number>;
+  deleteCarImage(imageName:String):Promise<Boolean>;
 }

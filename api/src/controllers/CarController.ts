@@ -138,7 +138,13 @@ export class CarController {
     next:NextFunction
   ):Promise<any>{
     try{
-      
+
+      const {imageName}= req.body
+      console.log("CAR IMAGE NAME :",imageName);
+      const imageIsDelete = await this.interactor.deleteCarImage(imageName)
+      if(imageIsDelete){
+        this.imagesProcess.deleteSingleImage(imageName + ".png")
+      }
       res.status(201).json({message:"Image Delete Success"})
     }catch(err){
       next(err)
