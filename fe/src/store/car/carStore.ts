@@ -30,7 +30,7 @@ export const carApi = createApi({
         }),
 
         getAllCarList:builder.query<any,any>({
-            query : (page) => `/getAllCars?page=${page}`
+            query : (query) => `/getAllCars?page=${query.page}&searchText=${query.searchText}`
         }),
 
         adminGetCar : builder.query<any,any>({
@@ -59,9 +59,7 @@ export const carApi = createApi({
                 method:"DELETE",
                 body:body
             })
-        })
-
-
+        }),
     })
 })
 export const { useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useAdminGetCarQuery , useAdminUpdateCarMutation , useAdminDeleteImageMutation , useAdminDeleteCarMutation} = carApi

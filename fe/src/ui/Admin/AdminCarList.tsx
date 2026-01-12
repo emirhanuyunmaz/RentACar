@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Input, Pagination, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
@@ -51,12 +51,35 @@ export default function AdminCarList () {
   const [searchParams,setSearchParams] = useSearchParams()
   
   const [page,setPage] = useState(searchParams.get("page") ?? 1)
-  const getAllCarList = useGetAllCarListQuery(page)
+  const [searchText,setSearchText] = useState(searchParams.get("searchText") ?? "")
+  const [searchTextSend,setSearchTextSend] = useState("")
+  const getAllCarList = useGetAllCarListQuery({page:searchParams.get("page") ?? 1,searchText:searchTextSend})
   
+  useEffect(() => {
+    setPage(Number(searchParams.get("page") ))
+    setSearchText(searchParams.get("searchText") as string)
+  },[])
+
+  useEffect(() => {
+    if(searchText != "null}"){
+      // setSearchParams(`?searchText=${searchText == 'null' ? "" : searchText}}`)
+    }
+
+  },[searchText])
+
   function changePage(clickPage:number){
     setSearchParams(`?page=${clickPage.toString()}`)
     setPage(clickPage)
   }
+  
+  function searchOnClick(){
+    setSearchParams(`?page=${1}&searchText=${searchText}`)
+    setSearchTextSend(searchText)
+    getAllCarList.refetch()
+  }
+
+  console.log(getAllCarList.data?.data.length);
+  console.log(getAllCarList.data?.count);
   
   return (
     <div className="min-h-[80vh] flex gap-3">
@@ -71,8 +94,8 @@ export default function AdminCarList () {
                         <Link to={`/admin/addCar`} className='border border-gray-300 px-3 py-1 rounded-xl hover:border-black transition-all' >+Add Car</Link>
                     </div>
                     <div className='flex gap-3'>
-                        <Input/>
-                        <Button>Search</Button>
+                        <Input value={searchText} onChange={(e) => setSearchText(e.target.value) } />
+                        <Button onClick={searchOnClick} >Search</Button>
                     </div>
                     <Table<DataType>
                         bordered
@@ -84,7 +107,7 @@ export default function AdminCarList () {
                         rowKey={`id`}
                     />
                     <div className='flex justify-center mt-3'>
-                       <Pagination defaultCurrent={1} total={(getAllCarList.data?.count ?? 0 )  / 5 * 10 } onChange={(e) => changePage(e.valueOf())} />
+                       <Pagination defaultCurrent={page as number} total={(getAllCarList.data?.count ?? 0 )  / 5 * 10 } onChange={(e) => changePage(e.valueOf())} />
                     </div>
                 </div>
             </div>

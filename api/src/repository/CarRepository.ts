@@ -7,7 +7,6 @@ import { CarEquipment } from '../entities/CarEquipment';
 
 @injectable()
 export class CarRepository implements ICarRepository {
-
   async createCar(
     car: Car,
     images: CarImages[],
@@ -72,10 +71,10 @@ export class CarRepository implements ICarRepository {
       .select('ce.car_id')
       .select(
         db.raw(`
-          JSON_ARRAYAGG(
-            JSON_OBJECT('id', e.id, 'value', e.value)
-            ) AS equipment
-            `)
+            JSON_ARRAYAGG(
+              JSON_OBJECT('id', e.id, 'value', e.value)
+              ) AS equipment
+              `)
       )
       .groupBy('ce.car_id')
       .as('eqs');
@@ -92,12 +91,12 @@ export class CarRepository implements ICarRepository {
     return rows;
   }
   async deleteCar(id: number): Promise<Boolean> {
-    const car = await db("cars").where("id",id)
-    if(car){
-      await db("cars").where("id",id).del()
-      return true
-    }else{
-      throw Error("Car is not found")
+    const car = await db('cars').where('id', id);
+    if (car) {
+      await db('cars').where('id', id).del();
+      return true;
+    } else {
+      throw Error('Car is not found');
     }
   }
   async updateCar(
@@ -144,10 +143,10 @@ export class CarRepository implements ICarRepository {
       .select('ci.car_id')
       .select(
         db.raw(`
-          JSON_ARRAYAGG(
-            JSON_OBJECT('id', ci.id, 'name', ci.name, 'link', ci.link)
-            ) AS images
-            `)
+        JSON_ARRAYAGG(
+          JSON_OBJECT('id', ci.id, 'name', ci.name, 'link', ci.link)
+          ) AS images
+          `)
       )
       .groupBy('ci.car_id')
       .as('imgs');
@@ -158,10 +157,10 @@ export class CarRepository implements ICarRepository {
       .select('ce.car_id')
       .select(
         db.raw(`
-              JSON_ARRAYAGG(
-                JSON_OBJECT('id', e.id, 'value', e.value)
-                ) AS equipment
-                `)
+            JSON_ARRAYAGG(
+              JSON_OBJECT('id', e.id, 'value', e.value)
+              ) AS equipment
+              `)
       )
       .groupBy('ce.car_id')
       .as('eqs');
@@ -181,26 +180,29 @@ export class CarRepository implements ICarRepository {
     return data;
   }
 
-  async getAllCars(page: number): Promise<Car[]> {
+  async getAllCars(page: number, searchText: string): Promise<Car[]> {
     const limit = 5;
     if (page) {
       const data = await db('cars')
         .orderBy('created_at')
+        .whereRaw('title LIKE ?', [`%${searchText || ''}%`])
         .offset((page - 1) * limit)
         .limit(limit);
       return data;
     } else {
       const data = await db('cars')
         .orderBy('created_at')
+        .where('title', 'like', `%${searchText}%`)
         .offset(0 * limit)
         .limit(limit);
       return data;
     }
   }
 
-  async carCount(): Promise<Number> {
-    const count =
-      await db('cars').count<Record<string, { total: number }>>('id as total');
+  async carCount(searchText: string): Promise<Number> {
+    const count = await db('cars')
+      .whereRaw('title LIKE ?', [`%${searchText || ''}%`])
+      .count<Record<string, { total: number }>>('id as total');
     return count[0].total;
   }
 
@@ -213,9 +215,18 @@ export class CarRepository implements ICarRepository {
       return false;
     }
   }
-  
+
   async getCarImageList(id: number): Promise<CarImages[]> {
-    const data = await db("car_images").where("car_id",id)
-    return data 
+    const data = await db('car_images').where('car_id', id);
+    return data;
+  }
+
+  async searchCar(name: string): Promise<Car[]> {
+    const cars = await db('cars')
+      .where('title', 'like', `%${name}%`)
+      .orderBy('created_at');
+    // .offset((page - 1) * limit)
+    // .limit(limit);;
+    return cars;
   }
 }

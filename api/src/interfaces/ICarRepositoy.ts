@@ -18,8 +18,9 @@ export interface ICarRepository {
   ): Promise<Car>;
   listCar(): Promise<Car[] | []>;
   getEquipmentList(): Promise<CarEquipment[]>;
-  getAllCars(page: number): Promise<Car[]>;
-  carCount(): Promise<Number>;
-  getCarImageList(id:number):Promise<CarImages[]>
+  getAllCars(page: number, searchText: string): Promise<Car[]>;
+  carCount(searchText: string): Promise<Number>;
+  getCarImageList(id: number): Promise<CarImages[]>;
   deleteCarImage(imageName: String): Promise<Boolean>;
+  searchCar(name: string): Promise<Car[]>;
 }

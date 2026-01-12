@@ -86,9 +86,17 @@ export class CarController {
   ): Promise<any> {
     try {
       const page = Number(req.query.page);
-      const data = await this.interactor.getAllCars(page);
-      const count = await this.interactor.carCount();
-      return res.status(200).json({ message: 'Success', data, count });
+      const searchText = req.query.searchText;
+      if (searchText != null) {
+        const data = await this.interactor.getAllCars(
+          page,
+          searchText == 'null' ? '' : (searchText as string)
+        );
+        const count = await this.interactor.carCount(
+          searchText == 'null' ? '' : (searchText as string)
+        );
+        return res.status(200).json({ message: 'Success', data, count });
+      }
     } catch (err) {
       next(err);
     }
@@ -140,24 +148,24 @@ export class CarController {
   }
 
   async adminDeleteCar(
-    req:Request,
-    res:Response,
-    next:NextFunction
-  ):Promise<any>{
-    try{
-      const {id} = req.body;
-      const imagesList = await this.interactor.getCarImageList(id)
-      const carIsDeleted = await this.interactor.deleteCar(id)
-      if(carIsDeleted){
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { id } = req.body;
+      const imagesList = await this.interactor.getCarImageList(id);
+      const carIsDeleted = await this.interactor.deleteCar(id);
+      if (carIsDeleted) {
         imagesList.map((image) => {
-          this.imagesProcess.deleteSingleImage(image.name + ".png")
-        })         
-        return res.status(201).json({message:"Car Delete Success"})
-      }else{
-        return res.status(404).json({message:"Car is not found"})
+          this.imagesProcess.deleteSingleImage(image.name + '.png');
+        });
+        return res.status(201).json({ message: 'Car Delete Success' });
+      } else {
+        return res.status(404).json({ message: 'Car is not found' });
       }
-    }catch(err){
-      next(err)
+    } catch (err) {
+      next(err);
     }
   }
 
@@ -173,6 +181,22 @@ export class CarController {
         this.imagesProcess.deleteSingleImage(imageName + '.png');
       }
       res.status(201).json({ message: 'Image Delete Success' });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async adminSearchCar(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { name } = req.body;
+      if (name) {
+        const cars = this.interactor.searchCar(name);
+        return res.status(200).json({ message: 'Success', data: cars });
+      }
     } catch (err) {
       next(err);
     }
