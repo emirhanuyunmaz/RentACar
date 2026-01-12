@@ -90,9 +90,7 @@ export class UserController {
       if (isAdmin == 'true') {
         const page = Number(req.query.page);
         const searchText = req.query.searchText;
-        if (searchText != null) {
-          console.log("USER:",searchText);
-          
+        if (searchText != null) {          
           const data = await this.interactor.getAllUser(
             page,
             searchText as string
