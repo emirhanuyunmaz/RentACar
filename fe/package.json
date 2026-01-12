@@ -15,7 +15,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.7",
     "antd": "^5.25.1",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.19",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",

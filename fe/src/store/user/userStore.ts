@@ -43,7 +43,7 @@ export const userApi = createApi({
     }),
 
     getAllUser:builder.query<any,any>({
-      query : (page:number) => `/getAllUser?page=${page}`,
+      query : (query) => `/getAllUser?page=${query.page}&searchText=${query.searchText}`,
     }),
 
     adminGetUser:builder.query<any,any>({

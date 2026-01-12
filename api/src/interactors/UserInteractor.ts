@@ -51,11 +51,11 @@ export class UserInteractor implements IUserInteractor {
     return await this.repository.deleteUser(id);
   }
 
-  async getAllUser(page: number): Promise<User[]> {
-    return await this.repository.getAllUser(page);
+  async getAllUser(page: number, searchText: string): Promise<User[]> {
+    return await this.repository.getAllUser(page, searchText);
   }
 
-  async userCount(): Promise<Number> {
-    return await this.repository.userCount();
+  async userCount(searchText: string): Promise<Number> {
+    return await this.repository.userCount(searchText);
   }
 }

@@ -58,8 +58,4 @@ export class CarInteractor implements ICarInteractor {
   async getCarImageList(id: number): Promise<CarImages[]> {
     return await this.repository.getCarImageList(id);
   }
-
-  async searchCar(name: string): Promise<Car[]> {
-    return await this.repository.searchCar(name);
-  }
 }

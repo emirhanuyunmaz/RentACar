@@ -12,6 +12,6 @@ export interface IUserInteractor {
   findUser(id: string): Promise<User>;
   deleteUser(id: number): Promise<User>;
   updateUser({ id, data }: { id: String; data: User }): Promise<User>;
-  getAllUser(page: number): Promise<User[]>;
-  userCount(): Promise<Number>;
+  getAllUser(page: number, searchText: string): Promise<User[]>;
+  userCount(searchText: string): Promise<Number>;
 }

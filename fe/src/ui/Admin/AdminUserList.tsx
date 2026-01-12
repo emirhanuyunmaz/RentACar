@@ -5,6 +5,7 @@ import { Link, useSearchParams } from 'react-router';
 import { useGetAllUserQuery } from '../../store/user/userStore';
 import {  FileOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 interface DataType {
   key:React.Key,
@@ -47,8 +48,7 @@ const columns: TableColumnsType<DataType> = [
     title: 'Create At',
     width: 100,
     dataIndex: 'created_at',
-    fixed: 'left',
-
+    render:(row) => <p>{dayjs(row).format('DD.MM.YYYY HH:mm')}</p>
   },
   {
     title: 'Show Profile',
@@ -65,11 +65,20 @@ export default function AdminUserList () {
   const [searchParams,setSearchParams] = useSearchParams()
   
   const [page,setPage] = useState(searchParams.get("page") ?? 1)
-  const getAllUser = useGetAllUserQuery(page)
+  const [searchText,setSearchText] = useState(searchParams.get("searchText") ?? "")
+  const [searchTextSend,setSearchTextSend] = useState("")
+  const getAllUser = useGetAllUserQuery({page:page,searchText:searchTextSend})
 
   function changePage(clickPage:number){
     setSearchParams(`?page=${clickPage.toString()}`)
     setPage(clickPage)
+  }
+
+  function searchButtonClick(){
+    setSearchParams(`?page=${1}&searchText=${searchText}`)
+    setSearchTextSend(searchText)
+    setPage(1)
+    getAllUser.refetch()
   }
   
   
@@ -88,8 +97,8 @@ export default function AdminUserList () {
                         
                     </div>
                     <div className='flex gap-3'>
-                        <Input/>
-                        <Button>Search</Button>
+                        <Input value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+                        <Button onClick={searchButtonClick} >Search</Button>
                     </div>
                     <Table<DataType>
                         bordered
@@ -101,7 +110,7 @@ export default function AdminUserList () {
                         rowKey={`id`}
                     />
                     <div className='flex justify-center mt-3'>
-                      <Pagination defaultCurrent={1} total={(getAllUser.data?.count ?? 0) / 5 * 10} onChange={(e) => changePage(e.valueOf())} />
+                      <Pagination defaultCurrent={page as number} total={(getAllUser.data?.count ?? 0) / 5 * 10} onChange={(e) => changePage(e.valueOf())} />
                     </div>
                 </div>
             </div>

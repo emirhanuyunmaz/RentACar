@@ -60,13 +60,6 @@ export default function AdminCarList () {
     setSearchText(searchParams.get("searchText") as string)
   },[])
 
-  useEffect(() => {
-    if(searchText != "null}"){
-      // setSearchParams(`?searchText=${searchText == 'null' ? "" : searchText}}`)
-    }
-
-  },[searchText])
-
   function changePage(clickPage:number){
     setSearchParams(`?page=${clickPage.toString()}`)
     setPage(clickPage)
@@ -77,9 +70,6 @@ export default function AdminCarList () {
     setSearchTextSend(searchText)
     getAllCarList.refetch()
   }
-
-  console.log(getAllCarList.data?.data.length);
-  console.log(getAllCarList.data?.count);
   
   return (
     <div className="min-h-[80vh] flex gap-3">

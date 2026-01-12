@@ -185,20 +185,4 @@ export class CarController {
       next(err);
     }
   }
-
-  async adminSearchCar(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<any> {
-    try {
-      const { name } = req.body;
-      if (name) {
-        const cars = this.interactor.searchCar(name);
-        return res.status(200).json({ message: 'Success', data: cars });
-      }
-    } catch (err) {
-      next(err);
-    }
-  }
 }

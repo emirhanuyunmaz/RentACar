@@ -48,17 +48,31 @@ export class UserRepository implements IUserRepository {
     throw new Error('User Not Found');
   }
 
-  async getAllUser(page: number): Promise<User[]> {
+  async getAllUser(page: number, searchText: string): Promise<User[]> {
     const limit = 5;
     if (page) {
       const data = await db('users')
         .orderBy('created_at')
+        .where(function () {
+          this.where('name', 'like', `%${searchText}%`).orWhere(
+            'surname',
+            'like',
+            `%${searchText}%`
+          );
+        })
         .offset((page - 1) * limit)
         .limit(limit);
       return data;
     } else {
       const data = await db('users')
         .orderBy('created_at')
+        .where(function () {
+          this.where('name', 'like', `%${searchText}%`).orWhere(
+            'surname',
+            'like',
+            `%${searchText}%`
+          );
+        })
         .offset(0 * limit)
         .limit(limit);
       return data;
@@ -74,9 +88,16 @@ export class UserRepository implements IUserRepository {
     }
     return user;
   }
-  async userCount(): Promise<Number> {
-    const count =
-      await db('users').count<Record<string, { total: number }>>('id as total');
+  async userCount(searchText: string): Promise<Number> {
+    const count = await db('users')
+      .where(function () {
+        this.where('name', 'like', `%${searchText}%`).orWhere(
+          'surname',
+          'like',
+          `%${searchText}%`
+        );
+      })
+      .count<Record<string, { total: number }>>('id as total');
     return count[0]['total'];
   }
 }

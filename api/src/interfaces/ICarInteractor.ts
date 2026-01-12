@@ -22,5 +22,4 @@ export interface ICarInteractor {
   carCount(searchText: string): Promise<Number>;
   getCarImageList(id: number): Promise<CarImages[]>;
   deleteCarImage(imageName: String): Promise<Boolean>;
-  searchCar(name: string): Promise<Car[]>;
 }

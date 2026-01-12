@@ -89,9 +89,21 @@ export class UserController {
       const isAdmin = req.headers.admin;
       if (isAdmin == 'true') {
         const page = Number(req.query.page);
-        const data = await this.interactor.getAllUser(page);
-        const count = await this.interactor.userCount();
-        return res.status(200).json({ message: 'Success', data, count });
+        const searchText = req.query.searchText;
+        if (searchText != null) {
+          console.log("USER:",searchText);
+          
+          const data = await this.interactor.getAllUser(
+            page,
+            searchText as string
+          );
+          const count = await this.interactor.userCount(searchText as string);
+          return res.status(200).json({ message: 'Success', data, count });
+        } else {
+          const data = await this.interactor.getAllUser(page, '');
+          const count = await this.interactor.userCount('');
+          return res.status(200).json({ message: 'Success', data, count });
+        }
       } else {
         return res.status(401).json({ message: 'ERROR : Not Authorized' });
       }

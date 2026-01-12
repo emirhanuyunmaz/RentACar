@@ -220,13 +220,4 @@ export class CarRepository implements ICarRepository {
     const data = await db('car_images').where('car_id', id);
     return data;
   }
-
-  async searchCar(name: string): Promise<Car[]> {
-    const cars = await db('cars')
-      .where('title', 'like', `%${name}%`)
-      .orderBy('created_at');
-    // .offset((page - 1) * limit)
-    // .limit(limit);;
-    return cars;
-  }
 }
