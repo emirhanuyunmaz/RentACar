@@ -8,8 +8,8 @@ export interface ICarInteractor {
     images: CarImages[],
     car_equipment: String[]
   ): Promise<Boolean>;
-  getCar(id: string): Promise<Car | undefined>;
-  deleteCar(id: string): Promise<Boolean>;
+  getCar(id: number): Promise<Car | undefined>;
+  deleteCar(id: number): Promise<Boolean>;
   updateCar(
     id: number,
     car: Car,
@@ -20,5 +20,6 @@ export interface ICarInteractor {
   getEquipmentList(): Promise<CarEquipment[]>;
   getAllCars(page: number): Promise<Car[]>;
   carCount(): Promise<Number>;
+  getCarImageList(id:number):Promise<CarImages[]>
   deleteCarImage(imageName: String): Promise<Boolean>;
 }

@@ -15,7 +15,7 @@ export class CarInteractor implements ICarInteractor {
   ) {
     this.repository = repository;
   }
-
+  
   createCar(
     car: Car,
     images: CarImages[],
@@ -23,15 +23,16 @@ export class CarInteractor implements ICarInteractor {
   ): Promise<Boolean> {
     return this.repository.createCar(car, images, car_equipment);
   }
-
+  
   async getEquipmentList(): Promise<CarEquipment[]> {
     return await this.repository.getEquipmentList();
   }
-  async getCar(id: string): Promise<Car | undefined> {
+  async getCar(id: number): Promise<Car | undefined> {
     return await this.repository.getCar(id);
   }
-  deleteCar(id: string): Promise<Boolean> {
-    throw new Error('Method not implemented.');
+  deleteCar(id: number): Promise<Boolean> {
+    
+    return this.repository.deleteCar(id)
   }
   async updateCar(
     id: number,
@@ -54,5 +55,9 @@ export class CarInteractor implements ICarInteractor {
   }
   async deleteCarImage(imageName: String): Promise<Boolean> {
     return await this.repository.deleteCarImage(imageName);
+  }
+
+  getCarImageList(id: number): Promise<CarImages[]> {
+    return this.repository.getCarImageList(id)
   }
 }

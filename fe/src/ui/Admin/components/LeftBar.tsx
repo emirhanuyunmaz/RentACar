@@ -1,4 +1,4 @@
-import { AppstoreFilled, DatabaseFilled, HomeFilled, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import { AppstoreFilled, BorderBottomOutlined, DatabaseFilled, HomeFilled, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router";
 
 
@@ -25,6 +25,10 @@ export default function LeftBar(){
             <li className={`flex gap-3 hover:opacity-40 transition-all`} >
                 <UsergroupAddOutlined />
                 <Link to={`/admin/userList`}>User List</Link>
+            </li>
+            <li className={`flex gap-3 hover:opacity-40 transition-all`} >
+                <BorderBottomOutlined/>
+                <Link to={`/admin/footer`}>Footer Edit</Link>
             </li>
         </ul>
 

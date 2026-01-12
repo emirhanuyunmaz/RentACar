@@ -1,10 +1,10 @@
 import type { FormProps, SelectProps, UploadFile } from 'antd';
-import { Button, Form, Image, Input, InputNumber, Select, Tag } from "antd";
+import { Button, Form, Image, Input, InputNumber, Modal, Select, Tag } from "antd";
 import ImageUpload from "./components/ImageUpload";
-import { SaveOutlined } from "@ant-design/icons";
+import { DeleteFilled, SaveOutlined } from "@ant-design/icons";
 import {  useEffect, useState } from 'react';
-import { useAdminDeleteImageMutation, useAdminGetCarQuery, useAdminUpdateCarMutation, useCarEquipmentListQuery } from '../../store/car/carStore';
-import { useSearchParams } from 'react-router';
+import { useAdminDeleteCarMutation, useAdminDeleteImageMutation, useAdminGetCarQuery, useAdminUpdateCarMutation, useCarEquipmentListQuery } from '../../store/car/carStore';
+import { useNavigate, useSearchParams } from 'react-router';
 
 type TagRender = SelectProps['tagRender'];
 
@@ -41,16 +41,19 @@ type FieldType = {
 };
 
 export default function AdminUpdateCar(){
-
+    
+    const navigate = useNavigate()
     const [searchParams,setSearchParams] = useSearchParams()
     const getAdminCar = useAdminGetCarQuery(searchParams.get("id"))
     const [options,setOptions] = useState([])
     const [updateCar,resUpdateCar] = useAdminUpdateCarMutation() 
     const getCarEquipmentList = useCarEquipmentListQuery("")
     const [adminDeleteCarImage,resDeleteImage] = useAdminDeleteImageMutation()
+    const [adminDeleteCar,resAdminDeleteCar] = useAdminDeleteCarMutation()
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [form] = Form.useForm<FieldType>();
-    
+      const [isModalOpen, setIsModalOpen] = useState(false);
+
     useEffect(() => {
         if(getCarEquipmentList.isSuccess){
             setOptions(getCarEquipmentList.data.data)
@@ -58,9 +61,7 @@ export default function AdminUpdateCar(){
     },[getCarEquipmentList.isSuccess])
     
     useEffect(() => {
-        if(getAdminCar.isSuccess){
-            console.log("DATA:",getAdminCar.data?.data.equipment);
-            
+        if(getAdminCar.isSuccess){            
             form.setFields([
                 { name: ["title"], value: getAdminCar.data?.data.title ?? "" },
                 { name: ["airConditioner"], value: getAdminCar.data?.data.airConditioner ?? "" },
@@ -83,7 +84,7 @@ export default function AdminUpdateCar(){
         fileList.map((image) => formData.append("images",image.originFileObj!) )
         formData.append("title",values.title)
         formData.append("airConditioner",String(values.airConditioner))
-        values.carEquipment.map((carEq) => {
+        values.carEquipment.map((carEq:any) => {
             const data = {id:carEq.key,name:carEq.label}
             formData.append("carEquipment[]",JSON.stringify(data))
         })
@@ -106,7 +107,6 @@ export default function AdminUpdateCar(){
     };
 
     const deleteImage = async (imageName:String) => {
-        console.log("DELETE IMAGE:",imageName);
         adminDeleteCarImage({imageName:imageName}).unwrap()
         .then((res) => {
             console.log("RES:",res);
@@ -115,6 +115,26 @@ export default function AdminUpdateCar(){
         })
         getAdminCar.refetch()
     }
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+        adminDeleteCar({id:searchParams.get("id")}).unwrap()
+        .then((res) => {
+            console.log("RES:",res);
+            navigate(-1)
+        }).catch((err) => {
+            console.log("ERR:",err);
+        })
+
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
     return(<div className="max-w-7xl md:mx-auto min-h-[75vh]">
     <Form
@@ -127,8 +147,12 @@ export default function AdminUpdateCar(){
       autoComplete="off"
     >
         <div className="flex flex-col gap-3">
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-3">
 
+                <Button onClick={showModal} variant="solid"  >
+                <span><DeleteFilled/></span>
+                    Delete
+                </Button>
                 <Button htmlType='submit' variant="dashed"  >
                 <span><SaveOutlined/></span>
                     Update
@@ -245,5 +269,14 @@ export default function AdminUpdateCar(){
             </div>
         </div>
         </Form>
+        <Modal
+            title="Delete Car"
+            closable={{ 'aria-label': 'Custom Close Button' }}
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            >
+            <p>Are you sure you want to delete the car?</p>
+        </Modal>
     </div>)
 }

@@ -102,7 +102,7 @@ export class CarController {
     try {
       const id = req.query.id;
       if (id) {
-        const data = await this.interactor.getCar(id as string);
+        const data = await this.interactor.getCar(Number(id));
         return res.status(200).json({ data });
       } else {
         return res.status(404).json({ message: 'Car not found !' });
@@ -136,6 +136,28 @@ export class CarController {
       return res.status(201).json({ message: 'Car Update Success' });
     } catch (err) {
       next(err);
+    }
+  }
+
+  async adminDeleteCar(
+    req:Request,
+    res:Response,
+    next:NextFunction
+  ):Promise<any>{
+    try{
+      const {id} = req.body;
+      const imagesList = await this.interactor.getCarImageList(id)
+      const carIsDeleted = await this.interactor.deleteCar(id)
+      if(carIsDeleted){
+        imagesList.map((image) => {
+          this.imagesProcess.deleteSingleImage(image.name + ".png")
+        })         
+        return res.status(201).json({message:"Car Delete Success"})
+      }else{
+        return res.status(404).json({message:"Car is not found"})
+      }
+    }catch(err){
+      next(err)
     }
   }
 

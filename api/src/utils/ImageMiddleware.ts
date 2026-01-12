@@ -6,7 +6,7 @@ export function imageFormated(images: String[]): CarImages[] {
     const data = {
       id: image.split('.')[0],
       name: image.split('.')[0],
-      link: config.BASE_URL + '/uploads/' + image,
+      link: config.BASE_URL + '/uploads' + image,
     };
 
     return data;

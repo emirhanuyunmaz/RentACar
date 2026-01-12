@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import LeftBar from "./components/LeftBar";
-import { AppstoreFilled, DatabaseFilled, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import { AppstoreFilled, BorderBottomOutlined, DatabaseFilled, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 
 
 export default function AdminHome(){
@@ -8,7 +8,7 @@ export default function AdminHome(){
         <div className=" md:w-64">
             <LeftBar/>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
             
             <Link to={`/admin/profile`} className="w-40 h-40 border-1 rounded-xl border-black flex flex-col justify-center items-center font-bold hover:shadow-2xl transition-all">
                 <UserOutlined/>
@@ -28,6 +28,11 @@ export default function AdminHome(){
             <Link to={`/admin/userList`} className="w-40 h-40 border-1 rounded-xl border-black flex flex-col justify-center items-center font-bold hover:shadow-2xl transition-all">
                 <UsergroupAddOutlined />
                 <p>User List</p>
+            </Link>
+            
+            <Link to={`/admin/footer`} className="w-40 h-40 border-1 rounded-xl border-black flex flex-col justify-center items-center font-bold hover:shadow-2xl transition-all">
+                <BorderBottomOutlined/>
+                <p>Footer Edit</p>
             </Link>
             
         </div>

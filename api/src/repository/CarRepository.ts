@@ -7,6 +7,7 @@ import { CarEquipment } from '../entities/CarEquipment';
 
 @injectable()
 export class CarRepository implements ICarRepository {
+
   async createCar(
     car: Car,
     images: CarImages[],
@@ -51,7 +52,7 @@ export class CarRepository implements ICarRepository {
       throw new Error(('Car create error :' + err) as string);
     }
   }
-  async getCar(id: string): Promise<Car | undefined> {
+  async getCar(id: number): Promise<Car | undefined> {
     // IMAGES alt sorgu
     const imgsAgg = db('car_images as ci')
       .select('ci.car_id')
@@ -90,8 +91,14 @@ export class CarRepository implements ICarRepository {
       .first();
     return rows;
   }
-  deleteCar(id: string): Promise<Boolean> {
-    throw new Error('Method not implemented.');
+  async deleteCar(id: number): Promise<Boolean> {
+    const car = await db("cars").where("id",id)
+    if(car){
+      await db("cars").where("id",id).del()
+      return true
+    }else{
+      throw Error("Car is not found")
+    }
   }
   async updateCar(
     id: number,
@@ -205,5 +212,10 @@ export class CarRepository implements ICarRepository {
     } else {
       return false;
     }
+  }
+  
+  async getCarImageList(id: number): Promise<CarImages[]> {
+    const data = await db("car_images").where("car_id",id)
+    return data 
   }
 }

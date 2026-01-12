@@ -55,7 +55,7 @@ export default function AdminUpdateUser(){
         adminDeleteUser({id:searchParams.get("id")}).unwrap()
         .then((res) => {
             console.log("RES:",res);
-            navigate(-1)
+            // navigate(-1)
         }).catch((err) => {
             console.log("ERR:",err);
         })
@@ -174,7 +174,6 @@ export default function AdminUpdateUser(){
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}
-            
             >
             <p>Are you sure you want to delete the user?</p>
         </Modal>

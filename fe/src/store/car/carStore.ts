@@ -51,9 +51,17 @@ export const carApi = createApi({
                 method:"DELETE",
                 body:body
             })
+        }),
+
+        adminDeleteCar:builder.mutation({
+            query:(body) => ({
+                url:"/adminDeleteCar",
+                method:"DELETE",
+                body:body
+            })
         })
 
 
     })
 })
-export const { useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useAdminGetCarQuery , useAdminUpdateCarMutation , useAdminDeleteImageMutation } = carApi
+export const { useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useAdminGetCarQuery , useAdminUpdateCarMutation , useAdminDeleteImageMutation , useAdminDeleteCarMutation} = carApi

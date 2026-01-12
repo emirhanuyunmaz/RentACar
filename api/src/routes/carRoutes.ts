@@ -75,4 +75,9 @@ router.delete(
   authControl.tokenControl.bind(authControl),
   controller.adminDeleteCarImage.bind(controller)
 );
+router.delete(
+  '/adminDeleteCar',
+  authControl.tokenControl.bind(authControl),
+  controller.adminDeleteCar.bind(controller)
+);
 export default router;

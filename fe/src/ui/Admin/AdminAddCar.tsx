@@ -56,7 +56,6 @@ const tagRender: TagRender = (props) => {
 type FieldType = {
     id:string | undefined,
     title:string,
-    // images:[{name:string,link:string}],
     price:string,
     gearBox:string,
     airConditioner:boolean,
@@ -87,7 +86,7 @@ export default function AdminAddCar(){
         fileList.map((image) => formData.append("images",image.originFileObj!) )
         formData.append("title",values.title)
         formData.append("airConditioner",String(values.airConditioner))
-        values.carEquipment.map((carEq) => {
+        values.carEquipment.map((carEq:any) => {
             const data = {id:carEq.key,name:carEq.label}
             formData.append("carEquipment",JSON.stringify(data))
         })
@@ -134,7 +133,7 @@ export default function AdminAddCar(){
                 </Button>
             </div>
             <div className="mx-3">
-                <ImageUpload fileList={fileList} setFileList={setFileList} />
+                <ImageUpload fileList={fileList} setFileList={setFileList} oldFileSize={0} />
             </div>
             <div className="flex flex-col gap-3 mx-3">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
