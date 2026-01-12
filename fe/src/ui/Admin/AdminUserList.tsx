@@ -3,7 +3,7 @@ import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
 import { Link, useSearchParams } from 'react-router';
 import { useGetAllUserQuery } from '../../store/user/userStore';
-import {  FileOutlined } from '@ant-design/icons';
+import {  ClearOutlined, FileOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 
@@ -81,6 +81,13 @@ export default function AdminUserList () {
     getAllUser.refetch()
   }
   
+  function searchClear(){
+    setSearchParams(`?page=${1}`)
+    setSearchTextSend("")
+    setSearchText("")
+    setPage(1)
+    getAllUser.refetch()
+  }
   
   return (
     <div className="min-h-[80vh] flex gap-3">
@@ -99,6 +106,7 @@ export default function AdminUserList () {
                     <div className='flex gap-3'>
                         <Input value={searchText} onChange={(e) => setSearchText(e.target.value)} />
                         <Button onClick={searchButtonClick} >Search</Button>
+                        <Button onClick={searchClear} ><ClearOutlined /></Button>
                     </div>
                     <Table<DataType>
                         bordered

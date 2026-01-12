@@ -4,7 +4,7 @@ import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
 import { Link, useSearchParams } from 'react-router';
 import { useGetAllCarListQuery } from '../../store/car/carStore';
-import { FileOutlined, SignatureOutlined } from '@ant-design/icons';
+import { ClearOutlined, FileOutlined, SignatureOutlined } from '@ant-design/icons';
 
 interface DataType {
   id : string;
@@ -71,6 +71,14 @@ export default function AdminCarList () {
     getAllCarList.refetch()
   }
   
+  function searchClear(){
+    setSearchParams(`?page=${1}`)
+    setSearchTextSend("")
+    setSearchText("")
+    setPage(1)
+    getAllCarList.refetch()
+  }
+  
   return (
     <div className="min-h-[80vh] flex gap-3">
                 
@@ -86,6 +94,8 @@ export default function AdminCarList () {
                     <div className='flex gap-3'>
                         <Input value={searchText} onChange={(e) => setSearchText(e.target.value) } />
                         <Button onClick={searchOnClick} >Search</Button>
+                        <Button onClick={searchClear} ><ClearOutlined /></Button>
+                        
                     </div>
                     <Table<DataType>
                         bordered
