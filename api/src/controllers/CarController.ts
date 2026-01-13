@@ -79,6 +79,20 @@ export class CarController {
     }
   }
 
+  async getCar(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+      const id = req.query.id;
+      if (id) {
+        const data = await this.interactor.getCar(Number(id));
+        return res.status(200).json({ data });
+      } else {
+        return res.status(404).json({ message: 'Car not found !' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async getAllCars(
     req: Request,
     res: Response,
@@ -96,24 +110,6 @@ export class CarController {
           searchText == 'null' ? '' : (searchText as string)
         );
         return res.status(200).json({ message: 'Success', data, count });
-      }
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async adminGetCar(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<any> {
-    try {
-      const id = req.query.id;
-      if (id) {
-        const data = await this.interactor.getCar(Number(id));
-        return res.status(200).json({ data });
-      } else {
-        return res.status(404).json({ message: 'Car not found !' });
       }
     } catch (err) {
       next(err);

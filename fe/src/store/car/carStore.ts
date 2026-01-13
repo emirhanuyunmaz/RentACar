@@ -29,12 +29,16 @@ export const carApi = createApi({
             })
         }),
 
+        getAllCarListShow:builder.query<any,any>({
+            query : () => `/carList`
+        }),
+        
         getAllCarList:builder.query<any,any>({
             query : (query) => `/getAllCars?page=${query.page}&searchText=${query.searchText}`
         }),
 
-        adminGetCar : builder.query<any,any>({
-            query: (id) => `/adminGetCar?id=${id}` 
+        getCar : builder.query<any,any>({
+            query: (id) => `/getCar?id=${id}` 
         }),
 
         adminUpdateCar : builder.mutation<any,any>({
@@ -62,4 +66,4 @@ export const carApi = createApi({
         }),
     })
 })
-export const { useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useAdminGetCarQuery , useAdminUpdateCarMutation , useAdminDeleteImageMutation , useAdminDeleteCarMutation} = carApi
+export const { useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useGetCarQuery , useGetAllCarListShowQuery, useAdminUpdateCarMutation , useAdminDeleteImageMutation , useAdminDeleteCarMutation} = carApi

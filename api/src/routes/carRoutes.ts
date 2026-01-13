@@ -60,9 +60,9 @@ router.post(
   controller.onCreateCar.bind(controller)
 );
 router.get(
-  '/adminGetCar',
+  '/getCar',
   authControl.tokenControl.bind(authControl),
-  controller.adminGetCar.bind(controller)
+  controller.getCar.bind(controller)
 );
 router.post(
   '/adminUpdateCar',

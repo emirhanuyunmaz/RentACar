@@ -81,7 +81,7 @@ export class CarRepository implements ICarRepository {
 
     // ANA SORGU
     const rows = await db('cars as c')
-      .where('id', id)
+      .where('c.id', id)
       .leftJoin(imgsAgg, 'imgs.car_id', 'c.id')
       .leftJoin(eqsAgg, 'eqs.car_id', 'c.id')
       .select('c.*')

@@ -3,7 +3,7 @@ import { Button, Form, Image, Input, InputNumber, Modal, Select, Tag } from "ant
 import ImageUpload from "./components/ImageUpload";
 import { DeleteFilled, SaveOutlined } from "@ant-design/icons";
 import {  useEffect, useState } from 'react';
-import { useAdminDeleteCarMutation, useAdminDeleteImageMutation, useAdminGetCarQuery, useAdminUpdateCarMutation, useCarEquipmentListQuery } from '../../store/car/carStore';
+import { useAdminDeleteCarMutation, useAdminDeleteImageMutation,  useAdminUpdateCarMutation, useCarEquipmentListQuery, useGetCarQuery } from '../../store/car/carStore';
 import { useNavigate, useSearchParams } from 'react-router';
 
 type TagRender = SelectProps['tagRender'];
@@ -44,7 +44,7 @@ export default function AdminUpdateCar(){
     
     const navigate = useNavigate()
     const [searchParams,setSearchParams] = useSearchParams()
-    const getAdminCar = useAdminGetCarQuery(searchParams.get("id"))
+    const getCar = useGetCarQuery(searchParams.get("id"))
     const [options,setOptions] = useState([])
     const [updateCar,resUpdateCar] = useAdminUpdateCarMutation() 
     const getCarEquipmentList = useCarEquipmentListQuery("")
@@ -61,21 +61,21 @@ export default function AdminUpdateCar(){
     },[getCarEquipmentList.isSuccess])
     
     useEffect(() => {
-        if(getAdminCar.isSuccess){            
+        if(getCar.isSuccess){            
             form.setFields([
-                { name: ["title"], value: getAdminCar.data?.data.title ?? "" },
-                { name: ["airConditioner"], value: getAdminCar.data?.data.airConditioner ?? "" },
-                { name: ["distance"], value: getAdminCar.data?.data.distance ?? "" },
-                { name: ["doors"], value: getAdminCar.data?.data.doors ?? "" },
-                { name: ["fuer"], value: getAdminCar.data?.data.fuer ?? "" },
-                { name: ["gearBox"], value: getAdminCar.data?.data.gearBox ?? "" },
-                { name: ["price"], value: getAdminCar.data?.data.price ?? "" },
-                { name: ["seats"], value: getAdminCar.data?.data.seats ?? "" },
-                { name: ["carEquipment"], value: getAdminCar.data?.data.equipment ?? [] },
+                { name: ["title"], value: getCar.data?.data.title ?? "" },
+                { name: ["airConditioner"], value: getCar.data?.data.airConditioner ?? "" },
+                { name: ["distance"], value: getCar.data?.data.distance ?? "" },
+                { name: ["doors"], value: getCar.data?.data.doors ?? "" },
+                { name: ["fuer"], value: getCar.data?.data.fuer ?? "" },
+                { name: ["gearBox"], value: getCar.data?.data.gearBox ?? "" },
+                { name: ["price"], value: getCar.data?.data.price ?? "" },
+                { name: ["seats"], value: getCar.data?.data.seats ?? "" },
+                { name: ["carEquipment"], value: getCar.data?.data.equipment ?? [] },
             ]);
             
         }
-    },[getAdminCar.isSuccess])
+    },[getCar.isSuccess])
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         
@@ -113,7 +113,7 @@ export default function AdminUpdateCar(){
         }).catch((err) => {
             console.log("ERR:",err);
         })
-        getAdminCar.refetch()
+        getCar.refetch()
     }
 
     const showModal = () => {
@@ -159,10 +159,10 @@ export default function AdminUpdateCar(){
                 </Button>
             </div>
             <div className="mx-3 flex gap-3">
-                { <ImageUpload fileList={fileList} setFileList={setFileList} oldFileSize={getAdminCar.data?.data.images.length}  />}
+                { <ImageUpload fileList={fileList} setFileList={setFileList} oldFileSize={getCar.data?.data.images.length}  />}
                 
                 {
-                    getAdminCar.data?.data.images.map((image:any) =>  <div className='flex flex-col items-center gap-3'>
+                    getCar.data?.data.images.map((image:any) =>  <div className='flex flex-col items-center gap-3'>
                         <Image key={image.id} width={96} alt="car image" crossOrigin='anonymous'
                         src={`${image.link}`} />
                         <Button onClick={() => deleteImage(image.name)} type='dashed' className='!text-red-600' >Delete</Button>
