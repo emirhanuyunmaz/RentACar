@@ -38,7 +38,7 @@ export const carApi = createApi({
         }),
 
         getCar : builder.query<any,any>({
-            query: (id) => `/getCar?id=${id}` 
+            query: (query) => `/getCar?id=11` 
         }),
 
         adminUpdateCar : builder.mutation<any,any>({

@@ -4,6 +4,7 @@ import ImageUpload from "./components/ImageUpload";
 import { SaveOutlined } from "@ant-design/icons";
 import {  useEffect, useState } from 'react';
 import { useCarEquipmentListQuery, useCreateCarMutation } from '../../store/car/carStore';
+import { useNavigate } from 'react-router';
 
 type TagRender = SelectProps['tagRender'];
 
@@ -67,7 +68,8 @@ type FieldType = {
 };
 
 export default function AdminAddCar(){
-    // const carDeneme = useDenemeCarQuery("")
+
+    const navigate = useNavigate()
     const [options,setOptions] = useState([])
     const [createCar,resCreateCar] = useCreateCarMutation()
     const getCarEquipmentList = useCarEquipmentListQuery("")
@@ -99,6 +101,7 @@ export default function AdminAddCar(){
         
         createCar(formData).unwrap().then((res) => {
             console.log(res);
+            navigate(-1)
         }).catch((err) => {
             console.log("ERR:",err);
         })

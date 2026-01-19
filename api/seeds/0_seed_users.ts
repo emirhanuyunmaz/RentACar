@@ -1,76 +1,75 @@
 import type { Knex } from 'knex';
 
 exports.seed = async function (knex: Knex) {
-  // await knex('users').del();
-
+  // await knex('users').truncate();
   await knex('users').insert([
     {
       name: 'Emirhan',
       surname: 'Uyunmaz',
-      email: 'emirhan1@example.com',
+      email: 'emirhan1@gmail.com',
       password: '123456',
       gender: 'male',
     },
     {
       name: 'Ayşe',
       surname: 'Yılmaz',
-      email: 'ayse@example.com',
+      email: 'ayse@gmail.com',
       password: '123456',
       gender: 'female',
     },
     {
       name: 'Mehmet',
       surname: 'Demir',
-      email: 'mehmet@example.com',
+      email: 'mehmet@gmail.com',
       password: '123456',
       gender: 'male',
     },
     {
       name: 'Zeynep',
       surname: 'Çelik',
-      email: 'zeynep@example.com',
+      email: 'zeynep@gmail.com',
       password: '123456',
       gender: 'female',
     },
     {
       name: 'Ahmet',
       surname: 'Kaya',
-      email: 'ahmet@example.com',
+      email: 'ahmet@gmail.com',
       password: '123456',
       gender: 'male',
     },
     {
       name: 'Elif',
       surname: 'Şahin',
-      email: 'elif@example.com',
+      email: 'elif@gmail.com',
       password: '123456',
       gender: 'female',
     },
     {
       name: 'Mert',
       surname: 'Koç',
-      email: 'mert@example.com',
+      email: 'mert@gmail.com',
       password: '123456',
       gender: 'male',
     },
     {
       name: 'Selin',
       surname: 'Aydın',
-      email: 'selin@example.com',
+      email: 'selin@gmail.com',
       password: '123456',
       gender: 'female',
     },
     {
       name: 'Can',
       surname: 'Güler',
-      email: 'can@example.com',
+      email: 'can@gmail.com',
       password: '123456',
       gender: 'male',
     },
     {
       name: 'Buse',
       surname: 'Aksoy',
-      email: 'buse@example.com',
+      email: 'buse@gmail.com',
       password: '1234560',
       gender: 'female',
     },

@@ -14,4 +14,11 @@ export type CarCard = {
     ]
 }
 
+export type ImageType =
+{
+    id:number,
+    link:string,
+    name:string
+}
+
 export type CarEquipmentType = {id:number,value:String}

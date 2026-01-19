@@ -61,7 +61,7 @@ router.post(
 );
 router.get(
   '/getCar',
-  authControl.tokenControl.bind(authControl),
+  // authControl.tokenControl.bind(authControl),
   controller.getCar.bind(controller)
 );
 router.post(

@@ -1,7 +1,6 @@
 import type { Knex } from 'knex';
 
-export async function seed(knex: Knex): Promise<void> {
-  // Tabloyu temizle ve ID sayacını sıfırla
+export async function seed(knex: Knex) {
   // await knex('car_equipment').truncate();
 
   await knex('car_equipment').insert([

@@ -85,9 +85,8 @@ export class CarController {
       if (id) {
         const data = await this.interactor.getCar(Number(id));
         return res.status(200).json({ data });
-      } else {
-        return res.status(404).json({ message: 'Car not found !' });
       }
+      return res.status(404).json({ message: 'Car not found !' });
     } catch (err) {
       next(err);
     }
