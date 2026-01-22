@@ -59,11 +59,8 @@ router.post(
   upload.array('images'),
   controller.onCreateCar.bind(controller)
 );
-router.get(
-  '/getCar',
-  // authControl.tokenControl.bind(authControl),
-  controller.getCar.bind(controller)
-);
+router.get('/getCar', controller.getCar.bind(controller));
+router.get('/getSubCarList', controller.subCarList.bind(controller));
 router.post(
   '/adminUpdateCar',
   authControl.tokenControl.bind(authControl),

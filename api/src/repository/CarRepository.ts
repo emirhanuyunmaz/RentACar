@@ -137,7 +137,14 @@ export class CarRepository implements ICarRepository {
 
     return car;
   }
-  async listCar(): Promise<Car[] | [] | any> {
+  async listCar({
+    category,
+    page,
+  }: {
+    category: string;
+    page: number;
+  }): Promise<Car[] | [] | any> {
+    const limit = 10;
     // IMAGES alt sorgu
     const imgsAgg = db('car_images as ci')
       .select('ci.car_id')
@@ -166,12 +173,22 @@ export class CarRepository implements ICarRepository {
       .as('eqs');
 
     // ANA SORGU
-    const rows = await db('cars as c')
+    const query = db('cars as c')
       .leftJoin(imgsAgg, 'imgs.car_id', 'c.id')
       .leftJoin(eqsAgg, 'eqs.car_id', 'c.id')
+      .leftJoin('categories as cat', 'c.category_id', 'cat.id')
       .select('c.*')
       .select(db.raw('COALESCE(imgs.images, JSON_ARRAY())   AS images'))
-      .select(db.raw('COALESCE(eqs.equipment, JSON_ARRAY()) AS equipment'));
+      .select(db.raw('COALESCE(eqs.equipment, JSON_ARRAY()) AS equipment'))
+      .select('cat.name as category_name')
+      .offset((page - 1) * limit)
+      .limit(limit)
+      .orderBy('c.created_at', 'desc');
+
+    if (category && category.trim() !== '') {
+      query.where('cat.name', 'like', `%${category}%`);
+    }
+    const rows = await query;
     return rows;
   }
 
@@ -219,5 +236,60 @@ export class CarRepository implements ICarRepository {
   async getCarImageList(id: number): Promise<CarImages[]> {
     const data = await db('car_images').where('car_id', id);
     return data;
+  }
+
+  async getSubCarList({
+    page,
+    category,
+  }: {
+    page: number;
+    category: string;
+  }): Promise<Car[]> {
+    const limit = 4;
+    // IMAGES alt sorgu
+    const imgsAgg = db('car_images as ci')
+      .select('ci.car_id')
+      .select(
+        db.raw(`
+        JSON_ARRAYAGG(
+          JSON_OBJECT('id', ci.id, 'name', ci.name, 'link', ci.link)
+          ) AS images
+          `)
+      )
+      .groupBy('ci.car_id')
+      .as('imgs');
+
+    // EQUIPMENT alt sorgu
+    const eqsAgg = db('car_equipment as ce')
+      .join('equipment as e', 'e.id', 'ce.equipment_id')
+      .select('ce.car_id')
+      .select(
+        db.raw(`
+            JSON_ARRAYAGG(
+              JSON_OBJECT('id', e.id, 'value', e.value)
+              ) AS equipment
+              `)
+      )
+      .groupBy('ce.car_id')
+      .as('eqs');
+
+    // ANA SORGU
+    const query = db('cars as c')
+      .leftJoin(imgsAgg, 'imgs.car_id', 'c.id')
+      .leftJoin(eqsAgg, 'eqs.car_id', 'c.id')
+      .leftJoin('categories as cat', 'c.category_id', 'cat.id')
+      .select('c.*')
+      .select(db.raw('COALESCE(imgs.images, JSON_ARRAY())   AS images'))
+      .select(db.raw('COALESCE(eqs.equipment, JSON_ARRAY()) AS equipment'))
+      .select('cat.name as category_name')
+      .offset((page - 1) * limit)
+      .limit(limit)
+      .orderBy('c.created_at', 'desc');
+    if (category && category.trim() !== '') {
+      query.where('cat.name', 'like', `%${category}%`);
+    }
+
+    const rows = await query;
+    return rows;
   }
 }

@@ -21,4 +21,6 @@ export type ImageType =
     name:string
 }
 
+export type CarCategory='All' | 'Sedan'| 'Cabriolet'| 'Picup'| 'Suv'| 'Minivan'
+
 export type CarEquipmentType = {id:number,value:String}

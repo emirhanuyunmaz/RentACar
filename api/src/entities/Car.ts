@@ -10,6 +10,7 @@ export class Car {
     public readonly doors: Number,
     public readonly seats: Number,
     public readonly distance: Number,
+    public readonly category: string,
     public readonly carEquipment: []
   ) {}
 }

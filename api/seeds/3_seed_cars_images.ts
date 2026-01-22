@@ -5,12 +5,12 @@ export async function seed(knex: Knex) {
 
   await knex('car_images').insert([
     {
-      car_id: 1, // 'car-1' yerine 1
+      car_id: 1,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },
     {
-      car_id: 2, // 'car-2' yerine 2
+      car_id: 2,
       name: 'rx.png',
       link: 'http://localhost:3002/uploads/rx.png',
     },

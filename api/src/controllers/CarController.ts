@@ -37,7 +37,19 @@ export class CarController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const data = await this.interactor.listCar();
+      const category =
+        req.query.category == undefined || req.query.category == 'undefined'
+          ? ''
+          : req.query.category;
+      const page =
+        req.query.page == undefined || req.query.page == 'undefined'
+          ? 1
+          : req.query.page;
+
+      const data = await this.interactor.listCar({
+        category: String(category),
+        page: Number(page),
+      });
       return res.status(200).json({ message: 'success', data });
     } catch (err) {
       next(err);
@@ -176,6 +188,25 @@ export class CarController {
         this.imagesProcess.deleteSingleImage(imageName + '.png');
       }
       res.status(201).json({ message: 'Image Delete Success' });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async subCarList(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { page, category } = req.query;
+      const data = await this.interactor.getSubCarList({
+        page: Number(page != undefined && page != 'undefined' ? page : 1),
+        category: String(
+          category != undefined && category != 'undefined' ? category : ''
+        ),
+      });
+      return res.status(200).json({ data: data, message: 'success' });
     } catch (err) {
       next(err);
     }

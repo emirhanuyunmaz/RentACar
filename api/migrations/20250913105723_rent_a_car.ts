@@ -1,7 +1,7 @@
 import type { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
-  // users
+  // 1. USERS
   await knex.schema
     .createTable('users', (table) => {
       table.increments('id').primary();
@@ -15,15 +15,30 @@ export async function up(knex: Knex): Promise<void> {
     })
     .then(() => console.log('User Table created'));
 
-  // cars
+  // 2. CATEGORIES
+  await knex.schema
+    .createTable('categories', (table) => {
+      table.increments('id').primary();
+      table.string('name', 50).notNullable().unique();
+    })
+    .then(() => console.log('Categories Table created'));
+
+  // 3. CARS
   await knex.schema
     .createTable('cars', (table) => {
       table.increments('id').primary();
+      table
+        .integer('category_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('categories')
+        .onDelete('RESTRICT');
       table.string('title', 150).notNullable();
       table.double('price').notNullable();
       table.string('gearBox').notNullable();
       table.boolean('airConditioner').notNullable().defaultTo(false);
-      table.string('fuer', 100).notNullable();
+      table.string('fuel', 100).notNullable(); // 'fuer' yazım hatası düzeltildi
       table.integer('doors').notNullable();
       table.integer('seats').notNullable();
       table.integer('distance').notNullable();
@@ -31,11 +46,10 @@ export async function up(knex: Knex): Promise<void> {
     })
     .then(() => console.log('Car Table created'));
 
-  // car-images
+  // 4. CAR IMAGES
   await knex.schema
     .createTable('car_images', (table) => {
       table.increments('id').primary();
-      // İlişkili car_id artık integer olmalı
       table
         .integer('car_id')
         .unsigned()
@@ -47,7 +61,7 @@ export async function up(knex: Knex): Promise<void> {
     })
     .then(() => console.log('Car Images Table created'));
 
-  // equipment
+  // 5. EQUIPMENT
   await knex.schema
     .createTable('equipment', (table) => {
       table.increments('id').primary();
@@ -55,11 +69,10 @@ export async function up(knex: Knex): Promise<void> {
     })
     .then(() => console.log('Equipment Table created'));
 
-  // car-equipment (junction)
+  // 6. CAR-EQUIPMENT (Junction)
   await knex.schema
     .createTable('car_equipment', (table) => {
       table.increments('id').primary();
-      // Foreign key'ler integer olmalı
       table
         .integer('car_id')
         .unsigned()
@@ -77,9 +90,11 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
+  // Silme sırası oluşturma sırasının tersi olmalı (Foreign Key hataları almamak için)
   await knex.schema.dropTableIfExists('car_equipment');
   await knex.schema.dropTableIfExists('equipment');
   await knex.schema.dropTableIfExists('car_images');
   await knex.schema.dropTableIfExists('cars');
+  await knex.schema.dropTableIfExists('categories'); // Kategori en son veya cars'tan hemen sonra
   await knex.schema.dropTableIfExists('users');
 }
