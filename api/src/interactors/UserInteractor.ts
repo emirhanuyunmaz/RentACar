@@ -28,7 +28,7 @@ export class UserInteractor implements IUserInteractor {
     const data = await this.repository.loginUser({ email, password });
     if (data) {
       const userToken = this.token.createToken({
-        id: data.id!,
+        id: String(data.id),
         admin: data.isAdmin,
       });
       return userToken;

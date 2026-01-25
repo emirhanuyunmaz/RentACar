@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Input, Pagination, Table } from 'antd';
+import { Button, Input, Modal, Pagination, Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import LeftBar from './components/LeftBar';
 import { Link, useSearchParams } from 'react-router';
 import { useGetAllCarListQuery } from '../../store/car/carStore';
-import { ClearOutlined, FileOutlined, SignatureOutlined } from '@ant-design/icons';
+import { ClearOutlined, DeleteOutlined, FileOutlined, FormOutlined, RightOutlined, SignatureOutlined } from '@ant-design/icons';
 
 interface DataType {
   id : string;
@@ -41,7 +41,7 @@ const columns: TableColumnsType<DataType> = [
     title: 'Show',
     fixed: 'right',
     width: 90,
-    render: () => <a><FileOutlined /></a>,
+    render: (row) => <a href={`/vehicle/${row.id}`}><FileOutlined /></a>,
   },
   
 ];
@@ -49,7 +49,9 @@ const columns: TableColumnsType<DataType> = [
 
 export default function AdminCarList () {
   const [searchParams,setSearchParams] = useSearchParams()
-  
+  const [isCategoryModalOpen, setCategoryIsModalOpen] = useState(false);
+  const [isEquipmentModalOpen, setEquipmentIsModalOpen] = useState(false);
+
   const [page,setPage] = useState(searchParams.get("page") ?? 1)
   const [searchText,setSearchText] = useState(searchParams.get("searchText") ?? "")
   const [searchTextSend,setSearchTextSend] = useState("")
@@ -78,6 +80,30 @@ export default function AdminCarList () {
     setPage(1)
     getAllCarList.refetch()
   }
+
+  function showCategoryModal ()  {
+    setCategoryIsModalOpen(true);
+  };
+
+  function handleOkCategory () {
+    setCategoryIsModalOpen(false);
+  };
+
+  function handleCancelCategory() {
+    setCategoryIsModalOpen(false);
+  };
+
+  function showEquipmentModal ()  {
+    setEquipmentIsModalOpen(true);
+  };
+
+  function handleOkEquipment () {
+    setEquipmentIsModalOpen(false);
+  };
+
+  function handleCancelEquipment() {
+    setEquipmentIsModalOpen(false);
+  };
   
   return (
     <div className="min-h-[80vh] flex gap-3">
@@ -89,7 +115,12 @@ export default function AdminCarList () {
                 <div className='w-[85%] px-10 overflow-y-auto flex flex-col gap-3'>
                     <div className='flex justify-between'>
                         <h1 className='text-2xl font-bold'>Car List</h1>
-                        <Link to={`/admin/addCar`} className='border border-gray-300 px-3 py-1 rounded-xl hover:border-black transition-all' >+Add Car</Link>
+                        <div className='flex gap-3'>
+
+                          <Button onClick={showCategoryModal}>+Category</Button>
+                          <Button onClick={showEquipmentModal}>+Equipment</Button>
+                          <Button><Link to={`/admin/addCar`}>+Add Car</Link></Button>
+                        </div>
                     </div>
                     <div className='flex gap-3'>
                         <Input value={searchText} onChange={(e) => setSearchText(e.target.value) } />
@@ -110,6 +141,51 @@ export default function AdminCarList () {
                        <Pagination defaultCurrent={page as number} total={(getAllCarList.data?.count ?? 0 )  / 5 * 10 } onChange={(e) => changePage(e.valueOf())} />
                     </div>
                 </div>
+                <Modal
+                  title="Category"
+                  closable={{ 'aria-label': 'Custom Close Button' }}
+                  open={isCategoryModalOpen}
+                  onOk={handleOkCategory}
+                  onCancel={handleCancelCategory}
+                >
+                  <div>
+                    <div className='flex justify-end mb-3'>
+                      <Button className='ms-auto'>+Category</Button>
+                    </div>
+                    <ul>
+                      <li className='grid grid-cols-2'>
+                        <span className='text-lg'> <span><RightOutlined /></span> Category 1</span>
+                        <div className='grid grid-cols-2 gap-1'>
+                          <Button><FormOutlined /></Button>
+                          <Button><DeleteOutlined /></Button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </Modal>
+
+                <Modal
+                  title="Equipment"
+                  closable={{ 'aria-label': 'Custom Close Button' }}
+                  open={isEquipmentModalOpen}
+                  onOk={handleOkEquipment}
+                  onCancel={handleCancelEquipment}
+                >
+                <div>
+                    <div className='flex justify-end mb-3'>
+                      <Button className='ms-auto'>+Equipment</Button>
+                    </div>
+                    <ul>
+                      <li className='grid grid-cols-2'>
+                        <span className='text-lg'> <span><RightOutlined /></span> Equipment 1</span>
+                        <div className='grid grid-cols-2 gap-1'>
+                          <Button><FormOutlined /></Button>
+                          <Button><DeleteOutlined /></Button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </Modal>
             </div>
     
     

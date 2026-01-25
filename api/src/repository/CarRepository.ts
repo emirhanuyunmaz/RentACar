@@ -4,6 +4,7 @@ import { ICarRepository } from '../interfaces/ICarRepositoy';
 import db from '../../dbConnection';
 import { injectable } from 'inversify';
 import { CarEquipment } from '../entities/CarEquipment';
+import { Category } from '../entities/Category';
 
 @injectable()
 export class CarRepository implements ICarRepository {
@@ -192,9 +193,69 @@ export class CarRepository implements ICarRepository {
     return rows;
   }
 
+  async getCategoryList(): Promise<Category[]> {
+    return await db('categories').select('*');
+  }
+  async updateCategory({
+    id,
+    name,
+  }: {
+    id: number;
+    name: string;
+  }): Promise<Category> {
+    let category: Category = await db('categories').where('id', id).first();
+    if (category) {
+      await db('categories').where('id', id).update({
+        name: name,
+      });
+      category = await db('categories').where('id', id).first();
+      return category;
+    } else {
+      throw new Error('Category not found is update function');
+    }
+  }
+  async deleteCategory({ id }: { id: number }): Promise<Category> {
+    const category = await db('categories').where('id', id);
+    if (category) {
+      return await db('categories').where('id', id).del();
+    } else {
+      throw new Error('Category is not found');
+    }
+  }
+
   async getEquipmentList(): Promise<CarEquipment[]> {
     const data = await db('equipment').select('*');
     return data;
+  }
+
+  async updateEquipment({
+    equipmentId,
+    equipmentName,
+  }: {
+    equipmentId: number;
+    equipmentName: string;
+  }): Promise<CarEquipment> {
+    let equipment: CarEquipment = await db('car_equipment')
+      .where('id', equipmentId)
+      .first();
+    if (equipment) {
+      await db('car_equipment').where('id', equipmentId).update({
+        name: equipmentName,
+      });
+      equipment = await db('car_equipment').where('id', equipmentId).first();
+      return equipment;
+    } else {
+      throw new Error('Equipment not found is update function');
+    }
+  }
+
+  async deleteEquipment(equipmentId: number): Promise<CarEquipment> {
+    const equipment = await db('equipment').where('id', equipmentId);
+    if (equipment) {
+      return await db('equipment').where('id', equipmentId).del();
+    } else {
+      throw Error('equipment is not found');
+    }
   }
 
   async getAllCars(page: number, searchText: string): Promise<Car[]> {

@@ -1,6 +1,6 @@
 export class Car {
   constructor(
-    public readonly id: string | undefined,
+    public readonly id: number | undefined,
     public readonly title: string,
     public readonly images: [{ name: string; link: string }],
     public readonly price: DoubleRange,

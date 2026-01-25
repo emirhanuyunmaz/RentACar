@@ -94,7 +94,9 @@ export class CarController {
   async getCar(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const id = req.query.id;
-      if (id) {
+      console.log(id);
+
+      if (id != undefined && id != 'undefined') {
         const data = await this.interactor.getCar(Number(id));
         return res.status(200).json({ data });
       }
@@ -207,6 +209,118 @@ export class CarController {
         ),
       });
       return res.status(200).json({ data: data, message: 'success' });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async showCategoryList(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const data = await this.interactor.getCategoryList();
+      return res.status(200).json({ message: 'success', data: data });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateCategory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const isAdmin = req.headers.admin;
+      if (isAdmin) {
+        const { id, name } = req.body;
+        const data = await this.interactor.updateCategory({
+          id: id,
+          name: name,
+        });
+        return res.status(201).json({ message: 'success', data: data });
+      } else {
+        return res.status(401).json({ message: 'User is nor admin !' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteCategory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const isAdmin = req.headers.admin;
+      if (isAdmin) {
+        const { id } = req.body;
+        const data = this.interactor.deleteCategory({ id: id });
+        return res.status(201).json({ message: 'success', data: data });
+      } else {
+        return res.status(401).json({ message: 'User is not admin !' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async showEquipmentList(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const data = await this.interactor.getEquipmentList();
+      return res.status(201).json({ message: 'Success', data: data });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateEquipment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const isAdmin = req.headers.admin;
+      const { id, name } = req.body;
+      if (isAdmin) {
+        const data = await this.interactor.updateEquipment({
+          equipmentId: id,
+          equipmentName: name,
+        });
+        return res
+          .status(201)
+          .json({ message: 'Update is success', data: data });
+      } else {
+        return res.status(401).json({ message: 'User is not admin !' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteEquipment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const isAdmin = req.headers.admin;
+      const { id } = req.body;
+      if (isAdmin) {
+        const data = this.interactor.deleteEquipment(id);
+        return res
+          .status(201)
+          .json({ message: 'Delete equipment is success', data: data });
+      } else {
+        return res.status(401).json({ message: 'User is not admin !' });
+      }
     } catch (err) {
       next(err);
     }

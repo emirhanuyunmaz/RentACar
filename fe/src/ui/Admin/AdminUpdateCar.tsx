@@ -43,8 +43,8 @@ type FieldType = {
 export default function AdminUpdateCar(){
     
     const navigate = useNavigate()
-    const [searchParams,setSearchParams] = useSearchParams()
-    const getCar = useGetCarQuery(searchParams.get("id"))
+    const [searchParams,setSearchParams] = useSearchParams()    
+    const getCar = useGetCarQuery({id:searchParams.get("id")})
     const [options,setOptions] = useState([])
     const [updateCar,resUpdateCar] = useAdminUpdateCarMutation() 
     const getCarEquipmentList = useCarEquipmentListQuery("")

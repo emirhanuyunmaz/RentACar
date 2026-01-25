@@ -5,6 +5,7 @@ import { ICarInteractor } from '../interfaces/ICarInteractor';
 import { ICarRepository } from '../interfaces/ICarRepositoy';
 import { INTERFACE_TYPE } from '../utils/appConsts';
 import { CarEquipment } from '../entities/CarEquipment';
+import { Category } from '../entities/Category';
 
 @injectable()
 export class CarInteractor implements ICarInteractor {
@@ -23,9 +24,38 @@ export class CarInteractor implements ICarInteractor {
   ): Promise<Boolean> {
     return this.repository.createCar(car, images, car_equipment);
   }
-
+  async getCategoryList(): Promise<Category[]> {
+    return await this.repository.getCategoryList();
+  }
+  async updateCategory({
+    id,
+    name,
+  }: {
+    id: number;
+    name: string;
+  }): Promise<Category> {
+    return await this.repository.updateCategory({ id: id, name: name });
+  }
+  async deleteCategory({ id }: { id: number }): Promise<Category> {
+    return await this.repository.deleteCategory({ id: id });
+  }
   async getEquipmentList(): Promise<CarEquipment[]> {
     return await this.repository.getEquipmentList();
+  }
+  async updateEquipment({
+    equipmentId,
+    equipmentName,
+  }: {
+    equipmentId: number;
+    equipmentName: string;
+  }): Promise<CarEquipment> {
+    return await this.repository.updateEquipment({
+      equipmentId,
+      equipmentName,
+    });
+  }
+  async deleteEquipment(equipmentId: number): Promise<CarEquipment> {
+    return await this.repository.deleteEquipment(equipmentId);
   }
   async getCar(id: number): Promise<Car | undefined> {
     return await this.repository.getCar(id);

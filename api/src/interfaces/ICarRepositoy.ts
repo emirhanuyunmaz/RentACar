@@ -1,6 +1,7 @@
 import { Car } from '../entities/Car';
 import { CarEquipment } from '../entities/CarEquipment';
 import { CarImages } from '../entities/CarImages';
+import { Category } from '../entities/Category';
 
 export interface ICarRepository {
   createCar(
@@ -24,6 +25,17 @@ export interface ICarRepository {
     page: number;
   }): Promise<Car[] | []>;
   getEquipmentList(): Promise<CarEquipment[]>;
+  updateEquipment({
+    equipmentId,
+    equipmentName,
+  }: {
+    equipmentId: number;
+    equipmentName: string;
+  }): Promise<CarEquipment>;
+  deleteEquipment(equipmentId: number): Promise<CarEquipment>;
+  getCategoryList(): Promise<Category[]>;
+  updateCategory({ id, name }: { id: number; name: string }): Promise<Category>;
+  deleteCategory({ id }: { id: number }): Promise<Category>;
   getAllCars(page: number, searchText: string): Promise<Car[]>;
   carCount(searchText: string): Promise<Number>;
   getCarImageList(id: number): Promise<CarImages[]>;

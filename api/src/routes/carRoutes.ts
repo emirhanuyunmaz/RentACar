@@ -52,7 +52,6 @@ router.get(
   controller.getAllCars.bind(controller)
 );
 router.get('/carList', controller.getCarList.bind(controller));
-router.get('/carEquipmentList', controller.getEquipmentList.bind(controller));
 router.post(
   '/create',
   authControl.tokenControl.bind(authControl),
@@ -77,4 +76,27 @@ router.delete(
   authControl.tokenControl.bind(authControl),
   controller.adminDeleteCar.bind(controller)
 );
+router.get('/carCategoryList', controller.showCategoryList.bind(controller));
+router.post(
+  '/updateCategory',
+  authControl.tokenControl.bind(authControl),
+  controller.updateCategory.bind(controller)
+);
+router.delete(
+  '/deleteCategory',
+  authControl.tokenControl.bind(authControl),
+  controller.deleteCategory.bind(controller)
+);
+router.get('/carEquipmentList', controller.getEquipmentList.bind(controller));
+router.post(
+  '/updateEquipment',
+  authControl.tokenControl.bind(authControl),
+  controller.updateEquipment.bind(controller)
+);
+router.delete(
+  '/deleteEquipment',
+  authControl.tokenControl.bind(authControl),
+  controller.deleteEquipment.bind(controller)
+);
+
 export default router;
