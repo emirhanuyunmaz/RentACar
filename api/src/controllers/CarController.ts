@@ -324,6 +324,8 @@ export class CarController {
     try {
       const isAdmin = req.headers.admin;
       const { id, name } = req.body;
+      console.log(id,name);
+      
       if (isAdmin) {
         const data = await this.interactor.updateEquipment({
           equipmentId: id,

@@ -242,14 +242,14 @@ export class CarRepository implements ICarRepository {
     equipmentId: number;
     equipmentName: string;
   }): Promise<CarEquipment> {
-    let equipment: CarEquipment = await db('car_equipment')
+    let equipment: CarEquipment = await db('equipment')
       .where('id', equipmentId)
       .first();
     if (equipment) {
-      await db('car_equipment').where('id', equipmentId).update({
-        name: equipmentName,
+      await db('equipment').where('id', equipmentId).update({
+        value: equipmentName,
       });
-      equipment = await db('car_equipment').where('id', equipmentId).first();
+      equipment = await db('equipment').where('id', equipmentId).first();
       return equipment;
     } else {
       throw new Error('Equipment not found is update function');

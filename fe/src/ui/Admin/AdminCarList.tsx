@@ -10,6 +10,7 @@ import {
   useDeleteCategoryMutation,
   useDeleteEquipmentMutation,
   useGetAllCarListQuery,
+  useUpdateEquipmentMutation,
 } from '../../store/car/carStore';
 import {
   ClearOutlined,
@@ -88,6 +89,7 @@ export default function AdminCarList() {
   const [searchText, setSearchText] = useState(
     searchParams.get('searchText') ?? ''
   );
+  const [selectedEquipment,setSelectedEquipment] = useState<EquipmentType>()
 
   const getAllCarList = useGetAllCarListQuery({
     page: searchParams.get('page') ?? 1,
@@ -98,6 +100,7 @@ export default function AdminCarList() {
   const [addEquipment, resAddEquipment] = useAddEquipmentMutation();
   const [deleteEquipment,resDeleteEquipment] = useDeleteEquipmentMutation()
   const[deleteCategory,resDeleteCategory] = useDeleteCategoryMutation()
+  const [updateEquipment,resUpdateEquipment] = useUpdateEquipmentMutation()
 
   useEffect(() => {
     setPage(Number(searchParams.get('page')));
@@ -179,8 +182,16 @@ export default function AdminCarList() {
     .catch((err) => {
       console.log(err);
     })
-
   }
+  function handleCancelUpdateEquipment(){
+    setUpdateEquipmentIsModalOpen(false)
+  }
+  function showUpdateEquipment(id:number,value:string){
+    console.log(id,value);
+    setSelectedEquipment({id:id,value:value})
+    setUpdateEquipmentIsModalOpen(true)
+  } 
+
   /*****************CATEGORY FORM*****************/
   const onFinishCategory: FormProps<CategoryType>['onFinish'] = async (
     values
@@ -189,6 +200,18 @@ export default function AdminCarList() {
   };
 
   const onFinishFailedCategory: FormProps<CategoryType>['onFinishFailed'] = (
+    errorInfo
+  ) => {
+    console.log('Failed:', errorInfo);
+  };
+  
+  const onFinishCategoryUpdate: FormProps<CategoryType>['onFinish'] = async (
+    values
+  ) => {
+    console.log('Success:', values);
+  };
+
+  const onFinishFailedCategoryUpdate: FormProps<CategoryType>['onFinishFailed'] = (
     errorInfo
   ) => {
     console.log('Failed:', errorInfo);
@@ -214,6 +237,29 @@ export default function AdminCarList() {
   ) => {
     console.log('Failed:', errorInfo);
   };
+
+  const onFinishEquipmentUpdate: FormProps<EquipmentType>['onFinish'] = async (
+    values
+  ) => {
+    
+    updateEquipment({id:selectedEquipment!.id,name:values.value}).unwrap()
+    .then((res) => {
+      equipmentList.refetch()
+      setUpdateEquipmentIsModalOpen(false)
+    }).catch((err) => {
+      console.log("ERR:",err);
+      
+    })
+    
+  };
+
+  const onFinishFailedEquipmentUpdate: FormProps<EquipmentType>['onFinishFailed'] = (
+    errorInfo
+  ) => {
+    console.log('Failed:', errorInfo);
+  };
+
+
 
   return (
     <div className="min-h-[80vh] flex gap-3">
@@ -320,7 +366,7 @@ export default function AdminCarList() {
                   {equipment.value}
                 </span>
                 <div className="grid grid-cols-2 gap-1">
-                  <Button>
+                  <Button onClick={() => showUpdateEquipment(equipment.id!!,equipment.value)}>
                     <FormOutlined />
                   </Button>
                   <Button onClick={() => deleteEquipmentOnClick(equipment.id!!)}>
@@ -425,8 +471,8 @@ export default function AdminCarList() {
             layout={'vertical'}
             style={{ width: '50vh' }}
             initialValues={{ remember: true }}
-            onFinish={onFinishCategory}
-            onFinishFailed={onFinishFailedCategory}
+            onFinish={onFinishCategoryUpdate}
+            onFinishFailed={onFinishFailedCategoryUpdate}
             autoComplete="off"
           >
             <Form.Item<CategoryType>
@@ -454,16 +500,18 @@ export default function AdminCarList() {
         title="Update Equipment"
         closable={{ 'aria-label': 'Custom Close Button' }}
         open={isUpdateEquipmentModalOpen}
+        onCancel={handleCancelUpdateEquipment}
         footer={[]}
       >
         <div>
           <Form
+            key={selectedEquipment?.id}
             name="basic"
             layout={'vertical'}
             style={{ width: '50vh' }}
-            initialValues={{ remember: true }}
-            onFinish={onFinishEquipment}
-            onFinishFailed={onFinishFailedEquipment}
+            initialValues={{value:selectedEquipment?.value, remember: true }}
+            onFinish={onFinishEquipmentUpdate}
+            onFinishFailed={onFinishFailedEquipmentUpdate}
             autoComplete="off"
           >
             <Form.Item<EquipmentType>
@@ -473,9 +521,9 @@ export default function AdminCarList() {
                 { required: true, message: 'Please input equipment name!' },
               ]}
             >
-              <Input placeholder="Name" />
+              <Input placeholder="Name"/>
             </Form.Item>
-
+              {/* <p>{selectedEquipment?.value}</p> */}
             <div className="flex justify-between">
               <Form.Item label={null}>
                 <Button type="primary" htmlType="submit">
