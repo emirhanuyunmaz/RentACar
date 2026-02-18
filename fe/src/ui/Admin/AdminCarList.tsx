@@ -10,6 +10,7 @@ import {
   useDeleteCategoryMutation,
   useDeleteEquipmentMutation,
   useGetAllCarListQuery,
+  useUpdateCategoryMutation,
   useUpdateEquipmentMutation,
 } from '../../store/car/carStore';
 import {
@@ -30,6 +31,7 @@ interface DataType {
 }
 
 interface CategoryType {
+  id:number | undefined;
   name: string;
 }
 interface EquipmentType {
@@ -90,6 +92,7 @@ export default function AdminCarList() {
     searchParams.get('searchText') ?? ''
   );
   const [selectedEquipment,setSelectedEquipment] = useState<EquipmentType>()
+  const [selectedCategory,setSelectedCategory] = useState<CategoryType>()
 
   const getAllCarList = useGetAllCarListQuery({
     page: searchParams.get('page') ?? 1,
@@ -101,6 +104,7 @@ export default function AdminCarList() {
   const [deleteEquipment,resDeleteEquipment] = useDeleteEquipmentMutation()
   const[deleteCategory,resDeleteCategory] = useDeleteCategoryMutation()
   const [updateEquipment,resUpdateEquipment] = useUpdateEquipmentMutation()
+  const [updateCategory,resUpdateCategory] = useUpdateCategoryMutation()
 
   useEffect(() => {
     setPage(Number(searchParams.get('page')));
@@ -153,6 +157,13 @@ export default function AdminCarList() {
       console.log("ERR:",err);
     })
   }
+  function showUpdateCategory(id:number,value:string){
+    setSelectedCategory({id:id,name:value})
+    setUpdateCategoryIsModalOpen(true)
+  }
+  function handleCancelUpdateCategory(){
+    setUpdateCategoryIsModalOpen(false)
+  }
   /*****************EQUIPMENT****************/
   function showAddEquipmentModal() {
     setAddEquipmentIsModalOpen(true);
@@ -187,7 +198,6 @@ export default function AdminCarList() {
     setUpdateEquipmentIsModalOpen(false)
   }
   function showUpdateEquipment(id:number,value:string){
-    console.log(id,value);
     setSelectedEquipment({id:id,value:value})
     setUpdateEquipmentIsModalOpen(true)
   } 
@@ -208,7 +218,13 @@ export default function AdminCarList() {
   const onFinishCategoryUpdate: FormProps<CategoryType>['onFinish'] = async (
     values
   ) => {
-    console.log('Success:', values);
+    updateCategory({id:selectedCategory?.id,name:values.name}).unwrap()
+    .then((res) => {
+      setUpdateCategoryIsModalOpen(false)
+      categoryList.refetch()
+    }).catch((err) => {
+      console.log("ERR:",err);
+    })
   };
 
   const onFinishFailedCategoryUpdate: FormProps<CategoryType>['onFinishFailed'] = (
@@ -331,7 +347,7 @@ export default function AdminCarList() {
                   {category.name}
                 </span>
                 <div className="grid grid-cols-2 gap-1">
-                  <Button>
+                  <Button onClick={() => showUpdateCategory(category.id,category.name)}>
                     <FormOutlined />
                   </Button>
                   <Button onClick={() => deleteCategoryOnClick(category.id)}>
@@ -463,14 +479,16 @@ export default function AdminCarList() {
         title="Update Category"
         closable={{ 'aria-label': 'Custom Close Button' }}
         open={isUpdateCategoryModalOpen}
+        onCancel={handleCancelUpdateCategory}
         footer={[]}
       >
         <div>
           <Form
+          key={selectedCategory?.id}
             name="basic"
             layout={'vertical'}
             style={{ width: '50vh' }}
-            initialValues={{ remember: true }}
+            initialValues={{ name:selectedCategory?.name,remember: true }}
             onFinish={onFinishCategoryUpdate}
             onFinishFailed={onFinishFailedCategoryUpdate}
             autoComplete="off"

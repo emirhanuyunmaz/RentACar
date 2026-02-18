@@ -252,7 +252,7 @@ export class CarController {
     try {
       const isAdmin = req.headers.admin;
       if (isAdmin) {
-        const { id, name } = req.body;
+        const { id, name } = req.body;        
         const data = await this.interactor.updateCategory({
           id: id,
           name: name,
