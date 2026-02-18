@@ -1,40 +1,39 @@
-
 export type UserCreatePostType = {
-    name:String,
-    surname:String,
-    email:String,
-    password:String,
-    gender:String
-}
+  name: String;
+  surname: String;
+  email: String;
+  password: String;
+  gender: String;
+};
 
 export type UserCreateGetType = {
-    isSucces:Boolean
-}
+  isSucces: Boolean;
+};
 
 export type UserLoginPostType = {
-    email:String,
-    password:String,
-    remember:Boolean
-}
+  email: String;
+  password: String;
+  remember: Boolean;
+};
 
 export type UserLoginGetType = {
-    token:String
-}
+  token: String;
+};
 
 export type userProfile = {
-    id:string,
-    name:string,
-    surname:string,
-    email:string,
-    password:string,
-    gender:string,
-    // isAdmin:Number
-}
+  id: string;
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  gender: string;
+  // isAdmin:Number
+};
 
 export type userUpdatePut = {
-    name?:string,
-  surname?:string,
+  name?: string;
+  surname?: string;
   email?: string;
   password?: string;
   gender?: string;
-}
+};

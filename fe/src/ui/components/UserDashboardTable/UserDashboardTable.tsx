@@ -94,16 +94,22 @@ const data = [
   },
 ];
 
-const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
+const onChange: TableProps<DataType>['onChange'] = (
+  pagination,
+  filters,
+  sorter,
+  extra
+) => {
   console.log('params', pagination, filters, sorter, extra);
 };
 
-export default function UserDashboardTable()  {
-  return <Table<DataType>
-    columns={columns}
-    dataSource={data}
-    onChange={onChange}
-    showSorterTooltip={{ target: 'sorter-icon' }}
-  />
-};
-
+export default function UserDashboardTable() {
+  return (
+    <Table<DataType>
+      columns={columns}
+      dataSource={data}
+      onChange={onChange}
+      showSorterTooltip={{ target: 'sorter-icon' }}
+    />
+  );
+}

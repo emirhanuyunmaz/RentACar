@@ -10,16 +10,26 @@ const getBase64 = (file: FileType): Promise<string> =>
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => {console.log("ERR:",error);  reject(error)};
+    reader.onerror = (error) => {
+      console.log('ERR:', error);
+      reject(error);
+    };
   });
 
-export default function ImageUpload({fileList, setFileList,oldFileSize = 0}:{fileList:UploadFile[], setFileList:any,oldFileSize:number}) {
+export default function ImageUpload({
+  fileList,
+  setFileList,
+  oldFileSize = 0,
+}: {
+  fileList: UploadFile[];
+  setFileList: any;
+  oldFileSize: number;
+}) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   // const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const handlePreview = async (file: UploadFile) => {
-      
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
     }
@@ -61,5 +71,4 @@ export default function ImageUpload({fileList, setFileList,oldFileSize = 0}:{fil
       )}
     </>
   );
-};
-
+}

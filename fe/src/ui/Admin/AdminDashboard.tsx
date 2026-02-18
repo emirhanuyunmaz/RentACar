@@ -23,7 +23,7 @@ const columns: TableColumnsType<DataType> = [
     width: 100,
     dataIndex: 'age',
   },
-  { title: 'Column 1', dataIndex: 'address', key: '1', },
+  { title: 'Column 1', dataIndex: 'address', key: '1' },
   { title: 'Column 2', dataIndex: 'address', key: '2' },
   { title: 'Column 3', dataIndex: 'address', key: '3' },
   { title: 'Column 4', dataIndex: 'address', key: '4' },
@@ -35,8 +35,6 @@ const columns: TableColumnsType<DataType> = [
     width: 90,
     render: () => <a>action</a>,
   },
-  
-  
 ];
 
 const dataSource: DataType[] = [
@@ -44,39 +42,33 @@ const dataSource: DataType[] = [
   { key: '2', name: 'Ethan', age: 40, address: 'London Park' },
 ];
 
-export default function AdminDashboard () {
-  
+export default function AdminDashboard() {
   return (
     <div className="min-h-[80vh] flex gap-3">
+      <div className="w-[15%]">
+        <LeftBar />
+      </div>
+      <div className="w-[85%] px-10 overflow-y-auto flex flex-col gap-3">
+        <div>
+          <h1>Dashboard</h1>
+        </div>
+        <div>
+          <DashboardTotalUser />
+        </div>
 
-                <div className="w-[15%]">
-                    <LeftBar/>
-                </div>
-                <div className='w-[85%] px-10 overflow-y-auto flex flex-col gap-3'>
-
-                    <div>
-                        <h1>Dashboard</h1>
-                    </div>
-                    <div>
-                      <DashboardTotalUser/>
-                    </div>
-                    
-                    <div className='flex gap-3'>
-                        <Input/>
-                        <Button>Search</Button>
-                    </div>
-                    <Table<DataType>
-                        bordered
-                        className={``}
-                        columns={columns}
-                        dataSource={dataSource}
-                        scroll={{ x: 'max-content' }}
-                        pagination={false}
-                    />
-                </div>
-            </div>
-    
-    
+        <div className="flex gap-3">
+          <Input />
+          <Button>Search</Button>
+        </div>
+        <Table<DataType>
+          bordered
+          className={``}
+          columns={columns}
+          dataSource={dataSource}
+          scroll={{ x: 'max-content' }}
+          pagination={false}
+        />
+      </div>
+    </div>
   );
-};
-
+}

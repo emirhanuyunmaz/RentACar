@@ -76,6 +76,11 @@ router.delete(
   authControl.tokenControl.bind(authControl),
   controller.adminDeleteCar.bind(controller)
 );
+router.post(
+  '/addCategory',
+  authControl.tokenControl.bind(authControl),
+  controller.addCategory.bind(controller)
+);
 router.get('/carCategoryList', controller.showCategoryList.bind(controller));
 router.post(
   '/updateCategory',
@@ -86,6 +91,11 @@ router.delete(
   '/deleteCategory',
   authControl.tokenControl.bind(authControl),
   controller.deleteCategory.bind(controller)
+);
+router.post(
+  '/addEquipment',
+  authControl.tokenControl.bind(authControl),
+  controller.AddEquipement.bind(controller)
 );
 router.get('/carEquipmentList', controller.getEquipmentList.bind(controller));
 router.post(

@@ -24,6 +24,7 @@ export interface ICarRepository {
     category: string;
     page: number;
   }): Promise<Car[] | []>;
+  addEquipment({ name }: { name: string }): Promise<CarEquipment>;
   getEquipmentList(): Promise<CarEquipment[]>;
   updateEquipment({
     equipmentId,
@@ -33,6 +34,7 @@ export interface ICarRepository {
     equipmentName: string;
   }): Promise<CarEquipment>;
   deleteEquipment(equipmentId: number): Promise<CarEquipment>;
+  addCategory({ name }: { name: string }): Promise<Category>;
   getCategoryList(): Promise<Category[]>;
   updateCategory({ id, name }: { id: number; name: string }): Promise<Category>;
   deleteCategory({ id }: { id: number }): Promise<Category>;

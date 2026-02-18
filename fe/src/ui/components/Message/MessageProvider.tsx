@@ -9,7 +9,11 @@ type MessageContextType = {
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined);
 
-export default function MessageProvider ({ children }:{children:React.ReactNode}) {
+export default function MessageProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [messageApi, contextHolder] = message.useMessage();
 
   const success = (content: string) => {
@@ -30,7 +34,7 @@ export default function MessageProvider ({ children }:{children:React.ReactNode}
       {children}
     </MessageContext.Provider>
   );
-};
+}
 
 export const useMessageApi = () => {
   const context = useContext(MessageContext);

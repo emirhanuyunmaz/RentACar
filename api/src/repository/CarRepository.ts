@@ -8,6 +8,7 @@ import { Category } from '../entities/Category';
 
 @injectable()
 export class CarRepository implements ICarRepository {
+
   async createCar(
     car: Car,
     images: CarImages[],
@@ -192,7 +193,9 @@ export class CarRepository implements ICarRepository {
     const rows = await query;
     return rows;
   }
-
+  async addCategory({ name }: { name: string; }): Promise<Category> {
+    return await db("categories").insert({name:name}) 
+  }
   async getCategoryList(): Promise<Category[]> {
     return await db('categories').select('*');
   }
@@ -221,6 +224,10 @@ export class CarRepository implements ICarRepository {
     } else {
       throw new Error('Category is not found');
     }
+  }
+
+  async addEquipment({ name }: { name: string; }): Promise<CarEquipment> {
+    return await db("equipment").insert({value:name}) 
   }
 
   async getEquipmentList(): Promise<CarEquipment[]> {

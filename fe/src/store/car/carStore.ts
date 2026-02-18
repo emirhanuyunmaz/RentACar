@@ -1,74 +1,144 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Cookies } from "typescript-cookie";
-
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { Cookies } from 'typescript-cookie';
 
 export const carApi = createApi({
-    reducerPath:"carApi",
-    baseQuery:fetchBaseQuery({
-        baseUrl:import.meta.env.VITE_BASE_API_URL + "/car",
-        headers : {
-            token : Cookies.get("token") as string
-        }
+  reducerPath: 'carApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: import.meta.env.VITE_BASE_API_URL + '/car',
+    headers: {
+      token: Cookies.get('token') as string,
+    },
+  }),
+
+  endpoints: (builder) => ({
+    denemeCar: builder.query<any, any>({
+      query: () => `/deneme`,
     }),
 
-    endpoints : (builder) => ({
+    createCar: builder.mutation<any, any>({
+      query: (body) => ({
+        url: '/create',
+        method: 'POST',
+        body: body,
+      }),
+    }),
 
-        denemeCar : builder.query<any,any>({
-            query:() => `/deneme`,
-        }),
+    getAllCarListShow: builder.query<any, any>({
+      query: (query) =>
+        `/carList?page=${query.page}&category=${query.category}`,
+    }),
 
-        carEquipmentList : builder.query<any,any>({
-            query:() => `/carEquipmentList`,
-        }),
+    getAllCarList: builder.query<any, any>({
+      query: (query) =>
+        `/getAllCars?page=${query.page}&searchText=${query.searchText}`,
+    }),
 
-        createCar :builder.mutation<any,any>({
-            query:(body) => ({
-                url:"/create",
-                method:"POST",
-                body:body
-            })
-        }),
+    getCar: builder.query<any, any>({
+      query: (query) => `/getCar?id=${query.id}`,
+    }),
 
-        getAllCarListShow:builder.query<any,any>({
-            query : (query) => `/carList?page=${query.page}&category=${query.category}`
-        }),
-        
-        getAllCarList:builder.query<any,any>({
-            query : (query) => `/getAllCars?page=${query.page}&searchText=${query.searchText}`
-        }),
+    adminUpdateCar: builder.mutation<any, any>({
+      query: (body) => ({
+        url: `/adminUpdateCar`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
 
-        getCar : builder.query<any,any>({
-            query: (query) => `/getCar?id=${query.id}` 
-        }),
+    adminDeleteImage: builder.mutation<any, any>({
+      query: (body) => ({
+        url: '/adminDeleteCarImage',
+        method: 'DELETE',
+        body: body,
+      }),
+    }),
 
-        adminUpdateCar : builder.mutation<any,any>({
-            query:(body) => ({
-                url:`/adminUpdateCar`,
-                method:"POST",
-                body:body
-            })
-        }),
+    adminDeleteCar: builder.mutation({
+      query: (body) => ({
+        url: '/adminDeleteCar',
+        method: 'DELETE',
+        body: body,
+      }),
+    }),
 
-        adminDeleteImage:builder.mutation<any,any>({
-            query:(body) =>({
-                url:"/adminDeleteCarImage",
-                method:"DELETE",
-                body:body
-            })
-        }),
+    getSubCarList: builder.query({
+      query: (query) =>
+        `/getSubCarList?page=${query.page}&category=${query.category}`,
+    }),
 
-        adminDeleteCar:builder.mutation({
-            query:(body) => ({
-                url:"/adminDeleteCar",
-                method:"DELETE",
-                body:body
-            })
-        }),
+    addCategory: builder.mutation({
+      query: (body) => ({
+        url: `/addCategory`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
 
-        getSubCarList:builder.query({
-            query : (query) => `/getSubCarList?page=${query.page}&category=${query.category}`
-        })
+    categoryList: builder.query({
+      query: () => `/carCategoryList`,
+    }),
 
-    })
-})
-export const { useDenemeCarQuery,useCreateCarMutation,useCarEquipmentListQuery , useGetAllCarListQuery , useGetCarQuery , useGetAllCarListShowQuery, useAdminUpdateCarMutation , useAdminDeleteImageMutation , useAdminDeleteCarMutation , useGetSubCarListQuery} = carApi
+    updateCategory: builder.mutation({
+      query: (body) => ({
+        url: `/updateCategory`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
+
+    deleteCategory: builder.mutation({
+      query: (body) => ({
+        url: `/deleteCategory`,
+        method: `DELETE`,
+        body: body,
+      }),
+    }),
+
+    addEquipment: builder.mutation({
+      query: (body) => ({
+        url: `/addEquipment`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
+
+    carEquipmentList: builder.query<any, any>({
+      query: () => `/carEquipmentList`,
+    }),
+
+    updateEquipment: builder.mutation({
+      query: (body) => ({
+        url: `/updateEquipment`,
+        method: 'POST',
+        body: body,
+      }),
+    }),
+
+    deleteEquipment: builder.mutation({
+      query: (body) => ({
+        url: `/deleteEquipment`,
+        method: `DELETE`,
+        body: body,
+      }),
+    }),
+  }),
+});
+export const {
+  useDenemeCarQuery,
+  useCreateCarMutation,
+  useGetAllCarListQuery,
+  useGetCarQuery,
+  useGetAllCarListShowQuery,
+  useAdminUpdateCarMutation,
+  useAdminDeleteImageMutation,
+  useAdminDeleteCarMutation,
+  useGetSubCarListQuery,
+  useAddCategoryMutation,
+  useCategoryListQuery,
+  useUpdateCategoryMutation,
+  useAddEquipmentMutation,
+  useCarEquipmentListQuery,
+  useDeleteCategoryMutation,
+  useUpdateEquipmentMutation,
+  useDeleteEquipmentMutation,
+} = carApi;

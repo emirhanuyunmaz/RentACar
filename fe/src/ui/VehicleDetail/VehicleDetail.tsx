@@ -1,35 +1,44 @@
-import { useEffect } from "react";
-import CarCarousel from "../components/CarCarousel/CarCarousel";
-import CarEquipment from "../components/CarEquipment/CarEquipment";
-import CarList from "../components/CarList/CarList";
-import TechnicalSpecificationsCard from "../components/TechnicalSpecificationsCard/TechnicalSpecificationsCard";
-import {  useGetCarQuery, useGetSubCarListQuery } from "../../store/car/carStore";
+import { useEffect } from 'react';
+import CarCarousel from '../components/CarCarousel/CarCarousel';
+import CarEquipment from '../components/CarEquipment/CarEquipment';
+import CarList from '../components/CarList/CarList';
+import TechnicalSpecificationsCard from '../components/TechnicalSpecificationsCard/TechnicalSpecificationsCard';
+import {
+  useGetCarQuery,
+  useGetSubCarListQuery,
+} from '../../store/car/carStore';
 
+export default function VehicleDetail() {
+  const getCar = useGetCarQuery({
+    id: window.location.pathname.replace('/vehicle/', ''),
+  });
+  const getSubCarList = useGetSubCarListQuery({ page: 1 });
 
-export default function VehicleDetail(){
-    
-    const getCar = useGetCarQuery({id:window.location.pathname.replace("/vehicle/","")})
-    const getSubCarList = useGetSubCarListQuery({page:1})
-
-    
-    return(<div className=" max-w-7xl mx-auto flex flex-col gap-3">
-        <div className="mx-3 md:mx-0">
-            <h2 className="text-3xl font-bold">{getCar.data?.data.title}</h2>
-            <h3 className="flex items-center gap-1"><span className="text-3xl text-purple-700 font-bold">${String(getCar.data?.data.price)}</span> <span className="text-gray-500 text-xl">/</span> <span className="text-gray-500 text-xl">day</span></h3>
+  return (
+    <div className=" max-w-7xl mx-auto flex flex-col gap-3">
+      <div className="mx-3 md:mx-0">
+        <h2 className="text-3xl font-bold">{getCar.data?.data.title}</h2>
+        <h3 className="flex items-center gap-1">
+          <span className="text-3xl text-purple-700 font-bold">
+            ${String(getCar.data?.data.price)}
+          </span>{' '}
+          <span className="text-gray-500 text-xl">/</span>{' '}
+          <span className="text-gray-500 text-xl">day</span>
+        </h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
+        <div>
+          <CarCarousel imageList={getCar.data?.data.images} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
-            <div>
-                <CarCarousel imageList={getCar.data?.data.images} />
-            </div>
-            <div>
-                <TechnicalSpecificationsCard {...getCar.data?.data}/>
-                <CarEquipment {...getCar.data?.data} />
-            </div>
+        <div>
+          <TechnicalSpecificationsCard {...getCar.data?.data} />
+          <CarEquipment {...getCar.data?.data} />
         </div>
-        <div className="mt-10">
-            <h3 className="text-3xl font-bold ms-3 md:ms-10 mb-10">Other Car</h3>
-            <CarList cars={getSubCarList.data?.data ?? []} />
-
-        </div>
-    </div>)
+      </div>
+      <div className="mt-10">
+        <h3 className="text-3xl font-bold ms-3 md:ms-10 mb-10">Other Car</h3>
+        <CarList cars={getSubCarList.data?.data ?? []} />
+      </div>
+    </div>
+  );
 }

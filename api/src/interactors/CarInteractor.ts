@@ -24,6 +24,9 @@ export class CarInteractor implements ICarInteractor {
   ): Promise<Boolean> {
     return this.repository.createCar(car, images, car_equipment);
   }
+  async addCategory({ name }: { name: string }): Promise<Category> {
+    return await this.repository.addCategory({ name: name });
+  }
   async getCategoryList(): Promise<Category[]> {
     return await this.repository.getCategoryList();
   }
@@ -38,6 +41,10 @@ export class CarInteractor implements ICarInteractor {
   }
   async deleteCategory({ id }: { id: number }): Promise<Category> {
     return await this.repository.deleteCategory({ id: id });
+  }
+
+  async addEquipment({ name }: { name: string }): Promise<CarEquipment> {
+    return await this.repository.addEquipment({ name: name });
   }
   async getEquipmentList(): Promise<CarEquipment[]> {
     return await this.repository.getEquipmentList();

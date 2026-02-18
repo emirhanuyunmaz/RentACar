@@ -214,6 +214,23 @@ export class CarController {
     }
   }
 
+  async addCategory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const isAdmin = req.headers.admin;
+      if (isAdmin) {
+        const { name } = req.body;
+        await this.interactor.addCategory({ name: name });
+        return res.status(201).json({ message: 'Success' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async showCategoryList(
     req: Request,
     res: Response,
@@ -268,6 +285,24 @@ export class CarController {
     }
   }
 
+  async AddEquipement(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const isAdmin = req.headers.admin;
+      if (isAdmin) {
+        const { value } = req.body;        
+        await this.interactor.addEquipment({ name: value });
+        return res.status(201).json({message:"Success"})
+      }
+      return res.status(401).json({message:"ERROR not authorization"})
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async showEquipmentList(
     req: Request,
     res: Response,
@@ -312,14 +347,14 @@ export class CarController {
   ): Promise<any> {
     try {
       const isAdmin = req.headers.admin;
-      const { id } = req.body;
-      if (isAdmin) {
+      const { id } = req.body;      
+      if (isAdmin && id) {
         const data = this.interactor.deleteEquipment(id);
         return res
           .status(201)
           .json({ message: 'Delete equipment is success', data: data });
       } else {
-        return res.status(401).json({ message: 'User is not admin !' });
+        return res.status(401).json({ message: 'User is not admin ! or id undefined !' });
       }
     } catch (err) {
       next(err);
