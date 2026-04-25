@@ -8,7 +8,8 @@
   "compilerOptions": {
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "ignoreDeprecations": "5.0"
+    "checkJs": false,
+    "noImplicitAny": false,
   }
 }
 }
